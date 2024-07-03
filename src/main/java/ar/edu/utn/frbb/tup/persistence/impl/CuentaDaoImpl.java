@@ -21,16 +21,30 @@ public class CuentaDaoImpl implements CuentaDao {
 
     @Override
     public Cuenta findCuenta(long numeroCuenta) {
-        for (Cuenta cuenta : repositorioCuentas.values()) {
-            if (cuenta.getNumeroCuenta() == numeroCuenta) {
-                return cuenta;
-            }
-        }
-        return null;
+        return repositorioCuentas.get(numeroCuenta);
     }
 
     @Override
-    public List<Cuenta> findAll(){
+    public List<Cuenta> findAll() {
         return new ArrayList<>(repositorioCuentas.values());
+    }
+
+    @Override
+    public Cuenta obtenerCuentaPorNumero(String numeroCuenta) {
+        try {
+            long numero = Long.parseLong(numeroCuenta);
+            return repositorioCuentas.get(numero);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public void actualizarCuenta(Cuenta cuenta) {
+        if (repositorioCuentas.containsKey(cuenta.getNumeroCuenta())) {
+            repositorioCuentas.put(cuenta.getNumeroCuenta(), cuenta);
+        } else {
+            throw new IllegalArgumentException("Cuenta no encontrada: " + cuenta.getNumeroCuenta());
+        }
     }
 }
