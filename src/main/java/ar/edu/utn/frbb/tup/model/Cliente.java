@@ -13,6 +13,12 @@ public class Cliente extends Persona{
     private LocalDate fechaAlta;
     private Set<Cuenta> cuentas = new HashSet<>();
 
+    public Cliente(String nombre, String apellido, long dni, TipoPersona tipoPersona, String banco) {
+        super(nombre, apellido, dni);
+        this.tipoPersona = tipoPersona;
+        this.banco = banco;
+    }
+
     public TipoPersona getTipoPersona() {
         return tipoPersona;
     }

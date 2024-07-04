@@ -14,8 +14,8 @@ public class Cuenta {
 
     public Cuenta() {
         this.numeroCuenta = new Random().nextLong();
-        this.balance = 0;
         this.fechaCreacion = LocalDateTime.now();
+        this.balance = 0;
     }
 
     public Cliente getTitular() {
@@ -25,7 +25,6 @@ public class Cuenta {
     public void setTitular(Cliente titular) {
         this.titular = titular;
     }
-
 
     public TipoCuenta getTipoCuenta() {
         return tipoCuenta;
@@ -44,7 +43,6 @@ public class Cuenta {
         this.moneda = moneda;
         return this;
     }
-
 
     public LocalDateTime getFechaCreacion() {
         return fechaCreacion;
