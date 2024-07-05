@@ -23,6 +23,12 @@ public class ClienteController {
         return new ResponseEntity<>(clientes, HttpStatus.OK);
     }
 
+    @GetMapping("/{dni}")
+    public ResponseEntity<Cliente> getClienteByID(@PathVariable("dni") long dni) {
+        Cliente cliente = clienteService.buscarClientePorDni(dni);
+        return new ResponseEntity<>(cliente, HttpStatus.OK);
+    }
+
     @PostMapping("/alta")
     public ResponseEntity<String> altaCliente(@RequestBody Cliente cliente) {   //public String altaCliente(@RequestBody ClienteDto clienteDto)
         try {
@@ -35,4 +41,5 @@ public class ClienteController {
         }
     }
 
+    // PUT agregarCuenta(){}
 }

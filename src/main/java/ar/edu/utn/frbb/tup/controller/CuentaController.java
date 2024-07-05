@@ -1,5 +1,6 @@
 package ar.edu.utn.frbb.tup.controller;
 
+import ar.edu.utn.frbb.tup.model.Cliente;
 import ar.edu.utn.frbb.tup.model.Cuenta;
 import ar.edu.utn.frbb.tup.model.exception.CuentaAlreadyExistsException;
 import ar.edu.utn.frbb.tup.model.exception.CuentaNoSoportadaException;
@@ -24,6 +25,12 @@ public class CuentaController {
     public ResponseEntity<List<Cuenta>> findAll() {
         List<Cuenta> cuentas = ((CuentaServiceImpl) cuentaService).findAll();
         return new ResponseEntity<>(cuentas, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Cuenta> getCuentaByID(@PathVariable("id") long id) {
+        Cuenta cuenta = cuentaService.find(id);
+        return new ResponseEntity<>(cuenta, HttpStatus.OK);
     }
 
     @PostMapping("/alta")

@@ -1,17 +1,19 @@
 package ar.edu.utn.frbb.tup.model;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Cliente extends Persona{
 
     private TipoPersona tipoPersona;
     private String banco;
-    private LocalDate fechaAlta;
+    private LocalDateTime fechaAlta;
     private Set<Cuenta> cuentas = new HashSet<>();
+
+    public Cliente() {
+        this.fechaAlta = LocalDateTime.now();
+    }
 
     public Cliente(String nombre, String apellido, long dni, TipoPersona tipoPersona, String banco) {
         super(nombre, apellido, dni);
@@ -35,11 +37,11 @@ public class Cliente extends Persona{
         this.banco = banco;
     }
 
-    public LocalDate getFechaAlta() {
+    public LocalDateTime getFechaAlta() {
         return fechaAlta;
     }
 
-    public void setFechaAlta(LocalDate fechaAlta) {
+    public void setFechaAlta(LocalDateTime fechaAlta) {
         this.fechaAlta = fechaAlta;
     }
 

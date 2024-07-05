@@ -10,13 +10,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class CuentaDaoImpl implements CuentaDao {
 
-    private static Map<Long, Cuenta> repositorioCuentas = new HashMap<>();
+    private static final Map<Long, Cuenta> repositorioCuentas = new HashMap<>();
 
     @Override
     public Cuenta saveCuenta(Cuenta cuenta) {
-        Random random = new Random();
-        cuenta.setNumeroCuenta(random.nextLong());
-        return repositorioCuentas.put(cuenta.getNumeroCuenta(), cuenta);
+        repositorioCuentas.put(cuenta.getNumeroCuenta(), cuenta);
+        return cuenta;
     }
 
     @Override
