@@ -30,16 +30,8 @@ public class ClienteController {
     }
 
     @PostMapping("/alta")
-    public ResponseEntity<String> altaCliente(@RequestBody Cliente cliente) {   //public String altaCliente(@RequestBody ClienteDto clienteDto)
-        try {
-            clienteService.darDeAltaCliente(cliente);
-            return new ResponseEntity<>("Cliente creado con éxito", HttpStatus.CREATED);
-        } catch (ClienteAlreadyExistsException e) {
-            return new ResponseEntity<>("Error al crear el cliente: " + e.getMessage(), HttpStatus.CONFLICT);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error inesperado: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<String> altaCliente(@RequestBody Cliente cliente) throws ClienteAlreadyExistsException {   //public String altaCliente(@RequestBody ClienteDto clienteDto)
+        clienteService.darDeAltaCliente(cliente);
+        return new ResponseEntity<>("Cliente creado con éxito", HttpStatus.CREATED);
     }
-
-    // PUT agregarCuenta(){}
 }

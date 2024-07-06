@@ -34,18 +34,8 @@ public class CuentaController {
     }
 
     @PostMapping("/alta")
-    public ResponseEntity<String> altaCuenta(@RequestBody Cuenta cuenta) {
-        try {
-            cuentaService.darDeAltaCuenta(cuenta);
-            return new ResponseEntity<>("Cuenta creada con éxito", HttpStatus.CREATED);
-        } catch (CuentaAlreadyExistsException | TipoCuentaAlreadyExistsException e) {
-            return new ResponseEntity<>("Error al crear la cuenta: " + e.getMessage(), HttpStatus.CONFLICT);
-        } catch (CuentaNoSoportadaException e) {
-            return new ResponseEntity<>("Error al crear la cuenta: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error inesperado: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<String> altaCuenta(@RequestBody Cuenta cuenta) throws CuentaNoSoportadaException, TipoCuentaAlreadyExistsException, CuentaAlreadyExistsException {
+        cuentaService.darDeAltaCuenta(cuenta);
+        return new ResponseEntity<>("Cuenta creada con éxito", HttpStatus.CREATED);
     }
-
-
 }
