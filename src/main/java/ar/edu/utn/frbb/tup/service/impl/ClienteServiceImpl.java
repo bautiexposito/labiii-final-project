@@ -1,5 +1,6 @@
 package ar.edu.utn.frbb.tup.service.impl;
 
+import ar.edu.utn.frbb.tup.controller.dto.ClienteDto;
 import ar.edu.utn.frbb.tup.model.Cliente;
 import ar.edu.utn.frbb.tup.model.Cuenta;
 import ar.edu.utn.frbb.tup.model.exception.ClienteAlreadyExistsException;
@@ -20,7 +21,9 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public void darDeAltaCliente(Cliente cliente) throws ClienteAlreadyExistsException {
+    public Cliente darDeAltaCliente(ClienteDto clienteDto) throws ClienteAlreadyExistsException {
+        Cliente cliente = new Cliente(clienteDto);
+
         if (clienteDao.findCliente(cliente.getDni(), false) != null) {
             throw new ClienteAlreadyExistsException("Ya existe un cliente con DNI " + cliente.getDni());
         }
@@ -34,17 +37,19 @@ public class ClienteServiceImpl implements ClienteService {
         }
 
         clienteDao.saveCliente(cliente);
+        return cliente;
     }
 
     @Override
     public void agregarCuenta(Cuenta cuenta, long dniTitular) throws TipoCuentaAlreadyExistsException {
-        Cliente titular = buscarClientePorDni(dniTitular);
-        cuenta.setTitular(titular);
-        if (titular.tieneCuenta(cuenta.getTipoCuenta(), cuenta.getMoneda())) {
-            throw new TipoCuentaAlreadyExistsException("El cliente ya posee una cuenta de ese tipo y moneda");
+        Cliente cliente = buscarClientePorDni(dniTitular);
+        if (cliente != null) {
+            cliente.getCuentas().add(cuenta);
+            cuenta.setTitular(cliente);
+            clienteDao.saveCliente(cliente);
+        }else {
+            throw new IllegalArgumentException("Cliente no encontrado con DNI: " + dniTitular);
         }
-        titular.addCuenta(cuenta);
-        clienteDao.saveCliente(titular);
     }
 
     @Override

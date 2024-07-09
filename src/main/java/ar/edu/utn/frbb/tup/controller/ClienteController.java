@@ -1,5 +1,7 @@
 package ar.edu.utn.frbb.tup.controller;
 
+import ar.edu.utn.frbb.tup.controller.dto.ClienteDto;
+import ar.edu.utn.frbb.tup.controller.validator.ClienteValidator;
 import ar.edu.utn.frbb.tup.model.Cliente;
 import ar.edu.utn.frbb.tup.model.exception.ClienteAlreadyExistsException;
 import ar.edu.utn.frbb.tup.service.ClienteService;
@@ -17,6 +19,9 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    @Autowired
+    private ClienteValidator clienteValidator;
+
     @GetMapping
         public ResponseEntity<List<Cliente>> getClientes() {
         List<Cliente> clientes = clienteService.obtenerTodosLosClientes();
@@ -30,8 +35,10 @@ public class ClienteController {
     }
 
     @PostMapping("/alta")
-    public ResponseEntity<String> altaCliente(@RequestBody Cliente cliente) throws ClienteAlreadyExistsException {   //public String altaCliente(@RequestBody ClienteDto clienteDto)
-        clienteService.darDeAltaCliente(cliente);
-        return new ResponseEntity<>("Cliente creado con éxito", HttpStatus.CREATED);
+    public Cliente altaCliente(@RequestBody ClienteDto clienteDto) throws ClienteAlreadyExistsException {
+        clienteValidator.validate(clienteDto);
+        return clienteService.darDeAltaCliente(clienteDto);
     }
+
+    //Put addCuenta()
 }

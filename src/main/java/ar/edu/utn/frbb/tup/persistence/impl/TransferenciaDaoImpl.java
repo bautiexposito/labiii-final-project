@@ -2,11 +2,12 @@ package ar.edu.utn.frbb.tup.persistence.impl;
 
 import ar.edu.utn.frbb.tup.model.Transferencia;
 import ar.edu.utn.frbb.tup.persistence.TransferenciaDao;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+@Repository
 public class TransferenciaDaoImpl implements TransferenciaDao {
 
     private List<Transferencia> transferencias = new ArrayList<>();
