@@ -1,6 +1,7 @@
 package ar.edu.utn.frbb.tup.model;
 
 import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -11,6 +12,7 @@ public class Cuenta {
     LocalDateTime fechaCreacion;
     double balance;
     TipoCuenta tipoCuenta;
+    @JsonBackReference
     Cliente titular;
     TipoMoneda moneda;
 

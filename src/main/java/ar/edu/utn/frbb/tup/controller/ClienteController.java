@@ -39,6 +39,4 @@ public class ClienteController {
         clienteValidator.validate(clienteDto);
         return clienteService.darDeAltaCliente(clienteDto);
     }
-
-    //Put addCuenta()
 }

@@ -1,13 +1,12 @@
 package ar.edu.utn.frbb.tup.service.impl;
 
-import ar.edu.utn.frbb.tup.model.CantidadNegativaException;
+import ar.edu.utn.frbb.tup.model.exception.CantidadNegativaException;
 import ar.edu.utn.frbb.tup.model.Cuenta;
-import ar.edu.utn.frbb.tup.model.NoAlcanzaException;
+import ar.edu.utn.frbb.tup.model.exception.NoAlcanzaException;
 import ar.edu.utn.frbb.tup.model.Transferencia;
 import ar.edu.utn.frbb.tup.persistence.CuentaDao;
 import ar.edu.utn.frbb.tup.persistence.TransferenciaDao;
 import ar.edu.utn.frbb.tup.service.TransferenciaService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,8 +41,8 @@ public class TransferenciaServiceImpl implements TransferenciaService {
 
         Transferencia transferencia = new Transferencia();
         transferencia.setMonto(monto);
-        transferencia.setCuentaOrigen(cuentaOrigen);
-        transferencia.setCuentaDestino(cuentaDestino);
+        transferencia.setCuentaOrigen(cuentaOrigen.getNumeroCuenta());
+        transferencia.setCuentaDestino(cuentaDestino.getNumeroCuenta());
         //transferencia.setFecha(LocalDateTime.now());
         //transferencia.setEstado("COMPLETADA");
 

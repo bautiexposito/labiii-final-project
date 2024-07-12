@@ -1,7 +1,7 @@
 package ar.edu.utn.frbb.tup.service;
 
-import ar.edu.utn.frbb.tup.model.CantidadNegativaException;
-import ar.edu.utn.frbb.tup.model.NoAlcanzaException;
+import ar.edu.utn.frbb.tup.model.exception.CantidadNegativaException;
+import ar.edu.utn.frbb.tup.model.exception.NoAlcanzaException;
 
 public interface TransferenciaService {
 

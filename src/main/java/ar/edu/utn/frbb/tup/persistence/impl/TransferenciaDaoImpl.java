@@ -21,8 +21,8 @@ public class TransferenciaDaoImpl implements TransferenciaDao {
     public List<Transferencia> buscarTransferenciasPorCuenta(long numeroCuenta) {
         List<Transferencia> resultado = new ArrayList<>();
         for (Transferencia transferencia : transferencias) {
-            if (transferencia.getCuentaOrigen().getNumeroCuenta() == numeroCuenta ||
-                    transferencia.getCuentaDestino().getNumeroCuenta() == numeroCuenta) {
+            if (transferencia.getCuentaOrigen() == numeroCuenta ||
+                    transferencia.getCuentaDestino() == numeroCuenta) {
                 resultado.add(transferencia);
             }
         }

@@ -42,6 +42,4 @@ public class CuentaController {
         cuentaValidator.validate(cuentaDto);
         return cuentaService.darDeAltaCuenta(cuentaDto);
     }
-
-    //Put setTitular()
 }
