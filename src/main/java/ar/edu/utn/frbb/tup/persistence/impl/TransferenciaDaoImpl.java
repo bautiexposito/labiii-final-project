@@ -18,7 +18,7 @@ public class TransferenciaDaoImpl implements TransferenciaDao {
     }
 
     @Override
-    public List<Transferencia> buscarTransferenciasPorCuenta(long numeroCuenta) {
+    public List<Transferencia> findTransfersByID(long numeroCuenta) {
         List<Transferencia> resultado = new ArrayList<>();
         for (Transferencia transferencia : transferencias) {
             if (transferencia.getCuentaOrigen() == numeroCuenta ||
@@ -28,4 +28,7 @@ public class TransferenciaDaoImpl implements TransferenciaDao {
         }
         return resultado;
     }
+
+    @Override
+    public List<Transferencia> findAllTransfers(){return transferencias;}
 }

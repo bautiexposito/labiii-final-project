@@ -32,10 +32,12 @@ public class CuentaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cuenta> getCuentaByID(@PathVariable("id") long id) {
-        Cuenta cuenta = cuentaService.find(id);
+    public ResponseEntity<Cuenta> getCuentaByNumeroDeCuenta(@PathVariable("id") long id) {
+        Cuenta cuenta = cuentaService.findByID(id);
         return new ResponseEntity<>(cuenta, HttpStatus.OK);
     }
+
+    //getCuentasByDNItitular(long dniTitular){}
 
     @PostMapping("/alta")
     public Cuenta altaCuenta(@RequestBody CuentaDto cuentaDto) throws CuentaNoSoportadaException, TipoCuentaAlreadyExistsException, CuentaAlreadyExistsException {

@@ -13,7 +13,5 @@ public interface CuentaDao {
 
     List<Cuenta> findAll();
 
-    Cuenta obtenerCuentaPorNumero(String numeroCuenta);
-
     void actualizarCuenta(Cuenta cuenta);
 }

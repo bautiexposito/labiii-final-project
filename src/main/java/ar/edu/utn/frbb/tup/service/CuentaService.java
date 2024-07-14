@@ -14,7 +14,7 @@ public interface CuentaService {
 
     boolean tipoCuentaEstaSoportada(Cuenta cuenta);
 
-    Cuenta find(long id);
+    Cuenta findByID(long id);
 
     List<Cuenta> findAll();
 }

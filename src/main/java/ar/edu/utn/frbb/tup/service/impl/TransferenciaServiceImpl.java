@@ -9,6 +9,9 @@ import ar.edu.utn.frbb.tup.persistence.TransferenciaDao;
 import ar.edu.utn.frbb.tup.service.TransferenciaService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 public class TransferenciaServiceImpl implements TransferenciaService {
 
@@ -21,7 +24,12 @@ public class TransferenciaServiceImpl implements TransferenciaService {
     }
 
     @Override
-    public void realizarTransferencia(long cuentaOrigenNumero, long cuentaDestinoNumero, double monto) throws Exception, NoAlcanzaException, CantidadNegativaException {
+    public void realizarTransferencia(Transferencia transferencia) throws Exception {
+        long cuentaOrigenNumero = transferencia.getCuentaOrigen();
+        long cuentaDestinoNumero = transferencia.getCuentaDestino();
+        double monto = transferencia.getMonto();
+        String moneda = transferencia.getMoneda();
+
         Cuenta cuentaOrigen = cuentaDao.findCuenta(cuentaOrigenNumero);
         Cuenta cuentaDestino = cuentaDao.findCuenta(cuentaDestinoNumero);
 
@@ -36,19 +44,22 @@ public class TransferenciaServiceImpl implements TransferenciaService {
             throw new Exception("Saldo insuficiente en la cuenta origen");
         }
 
+        if (!moneda.equals("pesos") && !moneda.equals("dolares")) {
+            throw new Exception("Tipo de moneda no válida");
+        }
+
         cuentaOrigen.debitar(monto);
         cuentaDestino.acreditar(monto);
 
-        Transferencia transferencia = new Transferencia();
-        transferencia.setMonto(monto);
-        transferencia.setCuentaOrigen(cuentaOrigen.getNumeroCuenta());
-        transferencia.setCuentaDestino(cuentaDestino.getNumeroCuenta());
-        //transferencia.setFecha(LocalDateTime.now());
-        //transferencia.setEstado("COMPLETADA");
+        transferencia.setFecha(LocalDate.now());
+        transferencia.setEstado("COMPLETADA");
 
         transferenciaDao.guardarTransferencia(transferencia);
 
         cuentaDao.actualizarCuenta(cuentaOrigen);
         cuentaDao.actualizarCuenta(cuentaDestino);
     }
+
+    public List<Transferencia> find(long id){return transferenciaDao.findTransfersByID(id);}
+    public List<Transferencia> findAll(){return transferenciaDao.findAllTransfers();}
 }

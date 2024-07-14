@@ -49,7 +49,7 @@ public class CuentaServiceImpl implements CuentaService {
     }
 
     @Override
-    public Cuenta find(long id) {
+    public Cuenta findByID(long id) {
         return cuentaDao.findCuenta(id);
     }
 

@@ -26,8 +26,8 @@ public class Cuenta {
         this.tipoCuenta = TipoCuenta.fromString(cuentaDto.getTipoCuenta());
         this.moneda = TipoMoneda.fromString(cuentaDto.getMoneda());
         this.fechaCreacion = LocalDateTime.now();
-        this.balance = 0;
-        this.numeroCuenta = new Random().nextLong();
+        this.balance = cuentaDto.getBalance();
+        this.numeroCuenta = Math.abs(new Random().nextInt()) + 1;
     }
 
     public Cliente getTitular() {

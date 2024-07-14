@@ -29,16 +29,6 @@ public class CuentaDaoImpl implements CuentaDao {
     }
 
     @Override
-    public Cuenta obtenerCuentaPorNumero(String numeroCuenta) {
-        try {
-            long numero = Long.parseLong(numeroCuenta);
-            return repositorioCuentas.get(numero);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-    @Override
     public void actualizarCuenta(Cuenta cuenta) {
         if (repositorioCuentas.containsKey(cuenta.getNumeroCuenta())) {
             repositorioCuentas.put(cuenta.getNumeroCuenta(), cuenta);

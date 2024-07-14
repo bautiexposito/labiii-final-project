@@ -1,23 +1,27 @@
 package ar.edu.utn.frbb.tup.model;
 
+import java.time.LocalDate;
+
 public class Transferencia {
 
     private long cuentaOrigen;
     private long cuentaDestino;
     private double monto;
     private String moneda;
+    private String estado;
+    private String mensaje;
+    private LocalDate fecha;
+    private String tipo;
+    private String descripcionBreve;
 
-    // Constructor
+    public Transferencia() {}
+
     public Transferencia(long cuentaOrigen, long cuentaDestino, double monto, String moneda) {
         this.cuentaOrigen = cuentaOrigen;
         this.cuentaDestino = cuentaDestino;
         this.monto = monto;
         this.moneda = moneda;
     }
-
-    public Transferencia() {}
-
-    public Transferencia(String cuentaOrigen, String cuentaDestino, double monto, TipoMoneda moneda) {}
 
     public long getCuentaOrigen() {
         return cuentaOrigen;
@@ -45,8 +49,27 @@ public class Transferencia {
 
     public void setMoneda(String moneda) {this.moneda = moneda;}
 
+    public String getEstado() {return estado;}
+
+    public void setEstado(String estado) {this.estado = estado;}
+
+    public String getMensaje() {return mensaje;}
+
+    public void setMensaje(String mensaje) {this.mensaje = mensaje;}
+
+    public LocalDate getFecha() {return fecha;}
+
+    public void setFecha(LocalDate fecha) {this.fecha = fecha;}
+
+    public String getTipo() {return tipo;}
+
+    public void setTipo(String tipo) {this.tipo = tipo;}
+
+    public String getDescripcionBreve() {return descripcionBreve;}
+
+    public void setDescripcionBreve(String descripcionBreve) {this.descripcionBreve = descripcionBreve;}
+
     public boolean validarTransferencia() {
-        // Verificar que la cuenta de origen y la cuenta de destino sean diferentes
         if (cuentaOrigen==cuentaDestino) {
             System.out.println("Error: La cuenta de origen y la cuenta de destino son iguales.");
             return false;

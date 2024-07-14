@@ -5,6 +5,7 @@ public class CuentaDto {
     private String tipoCuenta;
     private String moneda;
     private long dniTitular;
+    private double balance;
 
     public long getDniTitular() {return dniTitular;}
 
@@ -16,6 +17,8 @@ public class CuentaDto {
         return tipoCuenta;
     }
 
+    public double getBalance() {return balance;}
+
     public void setDniTitular(long dniTitular) {this.dniTitular = dniTitular;}
 
     public void setMoneda(String moneda) {
@@ -25,4 +28,6 @@ public class CuentaDto {
     public void setTipoCuenta(String tipoCuenta) {
         this.tipoCuenta = tipoCuenta;
     }
+
+    public void setBalance(double balance) {this.balance = balance;}
 }
