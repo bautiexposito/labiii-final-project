@@ -17,7 +17,10 @@ public class Cuenta {
     TipoMoneda moneda;
 
     public Cuenta() {
-        this.numeroCuenta = Math.abs(new Random().nextInt()) + 1;
+        Random random = new Random();
+        int lowerBound = 1000000;
+        int upperBound = 9000000;
+        this.numeroCuenta = lowerBound + random.nextInt(upperBound);
         this.fechaCreacion = LocalDateTime.now();
         this.balance = 0;
     }
@@ -27,7 +30,10 @@ public class Cuenta {
         this.moneda = TipoMoneda.fromString(cuentaDto.getMoneda());
         this.fechaCreacion = LocalDateTime.now();
         this.balance = cuentaDto.getBalance();
-        this.numeroCuenta = Math.abs(new Random().nextInt()) + 1;
+        Random random = new Random();
+        int lowerBound = 1000000;
+        int upperBound = 9000000;
+        this.numeroCuenta = lowerBound + random.nextInt(upperBound); //genera numero de 7 digitos
     }
 
     public Cliente getTitular() {

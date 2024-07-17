@@ -1,40 +1,57 @@
 package ar.edu.utn.frbb.tup.controller;
 
-import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
-import ar.edu.utn.frbb.tup.model.Cuenta;
 import ar.edu.utn.frbb.tup.model.Transferencia;
 import ar.edu.utn.frbb.tup.model.exception.*;
 import ar.edu.utn.frbb.tup.service.TransferenciaService;
-import ar.edu.utn.frbb.tup.service.impl.CuentaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/transferencias")
+@RequestMapping("/api")
 public class TransferenciaController {
 
     @Autowired
     private TransferenciaService transferenciaService;
 
-    @GetMapping
+    @GetMapping("/transacciones")
     public ResponseEntity<List<Transferencia>> getAll() {
         List<Transferencia> transferencias = transferenciaService.findAll();
         return new ResponseEntity<>(transferencias, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<Transferencia>> getByID(@PathVariable("id") long id) {
-        List<Transferencia> transferencias = transferenciaService.find(id);
-        return new ResponseEntity<>(transferencias, HttpStatus.OK);
+    @GetMapping("/cuenta/{cuentaId}/transacciones")
+    public ResponseEntity<Map<String, Object>> getByID(@PathVariable("cuentaId") long cuentaId) {
+        List<Transferencia> transferencias = transferenciaService.find(cuentaId);
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("numeroCuenta", cuentaId);
+        response.put("transacciones", transferencias.stream().map(t -> {
+            Map<String, Object> transaccion = new LinkedHashMap<>();
+            transaccion.put("fecha", t.getFecha().format(DateTimeFormatter.ISO_DATE));
+            if(cuentaId == t.getCuentaOrigen()){
+                transaccion.put("tipo", "DEBITO");
+                transaccion.put("descripcionBreve", "Transferencia saliente");
+            }else if(cuentaId == t.getCuentaDestino()){
+                transaccion.put("tipo", "CREDITO");
+                transaccion.put("descripcionBreve", "Transferencia entrante");
+            }
+            transaccion.put("monto", t.getMonto());
+            return transaccion;
+        }).collect(Collectors.toList()));
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("alta")
+    @PostMapping("/transfer")
     public ResponseEntity<Map<String, String>> postTransfer(@RequestBody Transferencia transferencia) throws NoAlcanzaException, CantidadNegativaException {
         try {
             transferenciaService.realizarTransferencia(transferencia);
