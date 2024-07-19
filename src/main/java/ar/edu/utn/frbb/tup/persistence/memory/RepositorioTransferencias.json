@@ -1,0 +1,24 @@
+[
+  {
+    "cuentaOrigen": 9345744,
+    "cuentaDestino": 6229472,
+    "monto": 777.0,
+    "moneda": "PESOS",
+    "estado": "COMPLETADA",
+    "mensaje": null,
+    "fecha": "2024-07-18",
+    "tipo": null,
+    "descripcionBreve": null
+  },
+  {
+    "cuentaOrigen": 6229472,
+    "cuentaDestino": 9345744,
+    "monto": 666.0,
+    "moneda": "PESOS",
+    "estado": "COMPLETADA",
+    "mensaje": null,
+    "fecha": "2024-07-18",
+    "tipo": null,
+    "descripcionBreve": null
+  }
+]

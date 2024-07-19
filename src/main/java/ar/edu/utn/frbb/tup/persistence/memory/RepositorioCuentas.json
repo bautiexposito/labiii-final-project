@@ -1,0 +1,18 @@
+[
+  {
+    "numeroCuenta": 9345744,
+    "fechaCreacion": "2024-07-18T14:30:10.2902493",
+    "balance": 143294,
+    "tipoCuenta": "CAJA_AHORRO",
+    "moneda": "PESOS",
+    "dniTitular": 43046272
+  },
+  {
+    "numeroCuenta": 6229472,
+    "fechaCreacion": "2024-07-18T14:30:13.3772526",
+    "balance": 984234,
+    "tipoCuenta": "CAJA_AHORRO",
+    "moneda": "PESOS",
+    "dniTitular": 50938732
+  }
+]

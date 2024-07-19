@@ -24,6 +24,7 @@ public class TransferenciaServiceImpl implements TransferenciaService {
     private TipoMoneda tipoMoneda;
     @Autowired
     private Banco banco;
+    @Autowired
     private Banelco banelco;
 
 
@@ -50,9 +51,30 @@ public class TransferenciaServiceImpl implements TransferenciaService {
 
         if (cuentaOrigen.getBalance() < monto) {throw new Exception("Saldo insuficiente en la cuenta origen");}
 
+        // Si la cuenta destino no se encuentra creada en nuestro sistema bancario,
+        // Simulamos una invocacion a un servicio externo "Banelco", para determinar si la cuenta destino es existente.
         if (cuentaDestino == null) {
             if(banelco.cuentaExiste(cuentaDestinoNumero)){
-                //implementar
+                if (cuentaOrigen.getMoneda()==TipoMoneda.PESOS){
+                    if(monto<1000000){
+                        cuentaOrigen.debitar(monto);
+                        banelco.acreditar(monto, cuentaDestinoNumero);
+                    } else{
+                        banco.guardarComisionEnPesos(monto*0.02);
+                        cuentaOrigen.debitar(monto*0.98);
+                        banelco.acreditar(monto*0.98, cuentaDestinoNumero);
+                    }
+                } else if (cuentaOrigen.getMoneda()==TipoMoneda.DOLARES){
+                    if(monto<5000){
+                        banco.guardarComisionEnDolares(monto*0.005);
+                        cuentaOrigen.debitar(monto*0.995);
+                        banelco.acreditar(monto*0.995, cuentaDestinoNumero);
+                    }
+                }
+                transferencia.setFecha(LocalDate.now());
+                transferencia.setEstado("COMPLETADA");
+                transferenciaDao.guardarTransferencia(transferencia);
+                cuentaDao.actualizarCuenta(cuentaOrigen);
                 return;
             } else{
                 throw new Exception("Cuenta destino no encontrada");

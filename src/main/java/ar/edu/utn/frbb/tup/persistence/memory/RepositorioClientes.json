@@ -1,0 +1,42 @@
+[
+  {
+    "nombre": "Bautista",
+    "apellido": "Exposito",
+    "dni": 43046272,
+    "fechaNacimiento": "1990-01-01",
+    "tipoPersona": "PERSONA_FISICA",
+    "banco": "Banco Provincia",
+    "fechaAlta": "2024-07-18T15:27:40.8384277",
+    "cuentas": [
+      {
+        "numeroCuenta": 9345744,
+        "fechaCreacion": "2024-07-18T14:30:10.2902493",
+        "balance": 143294,
+        "tipoCuenta": "CAJA_AHORRO",
+        "moneda": "PESOS",
+        "dniTitular": 43046272
+      }
+    ],
+    "edad": 23
+  },
+  {
+    "nombre": "Juan",
+    "apellido": "Perez",
+    "dni": 50938732,
+    "fechaNacimiento": "1990-01-01",
+    "tipoPersona": "PERSONA_FISICA",
+    "banco": "Banco Nacional",
+    "fechaAlta": "2024-06-18T15:27:40.8384277",
+    "cuentas": [
+      {
+        "numeroCuenta": 6229472,
+        "fechaCreacion": "2024-07-18T14:30:13.3772526",
+        "balance": 984234,
+        "tipoCuenta": "CAJA_AHORRO",
+        "moneda": "PESOS",
+        "dniTitular": 50938732
+      }
+    ],
+    "edad": 34
+  }
+]
