@@ -1,5 +1,6 @@
 package ar.edu.utn.frbb.tup.service.impl;
 
+import ar.edu.utn.frbb.tup.controller.dto.TransferenciaDto;
 import ar.edu.utn.frbb.tup.model.Banco;
 import ar.edu.utn.frbb.tup.model.TipoMoneda;
 import ar.edu.utn.frbb.tup.model.exception.CantidadNegativaException;
@@ -38,7 +39,9 @@ public class TransferenciaServiceImpl implements TransferenciaService {
     public List<Transferencia> findAll(){return transferenciaDao.findAllTransfers();}
 
     @Override
-    public void realizarTransferencia(Transferencia transferencia) throws Exception {
+    public void realizarTransferencia(TransferenciaDto transferenciaDto) throws Exception {
+        Transferencia transferencia = new Transferencia(transferenciaDto);
+
         long cuentaOrigenNumero = transferencia.getCuentaOrigen();
         long cuentaDestinoNumero = transferencia.getCuentaDestino();
         double monto = transferencia.getMonto();

@@ -1,5 +1,7 @@
 package ar.edu.utn.frbb.tup.controller;
 
+import ar.edu.utn.frbb.tup.controller.dto.TransferenciaDto;
+import ar.edu.utn.frbb.tup.controller.validator.TransferenciaValidator;
 import ar.edu.utn.frbb.tup.model.Transferencia;
 import ar.edu.utn.frbb.tup.model.exception.*;
 import ar.edu.utn.frbb.tup.service.TransferenciaService;
@@ -21,6 +23,8 @@ public class TransferenciaController {
 
     @Autowired
     private TransferenciaService transferenciaService;
+    @Autowired
+    private TransferenciaValidator transferenciaValidator;
 
     @GetMapping("/transacciones")
     public ResponseEntity<List<Transferencia>> getAll() {
@@ -52,9 +56,10 @@ public class TransferenciaController {
     }
 
     @PostMapping("/transfer")
-    public ResponseEntity<Map<String, String>> postTransfer(@RequestBody Transferencia transferencia) throws NoAlcanzaException, CantidadNegativaException {
+    public ResponseEntity<Map<String, String>> postTransfer(@RequestBody TransferenciaDto transferenciaDto) throws NoAlcanzaException, CantidadNegativaException {
+        transferenciaValidator.validate(transferenciaDto);
         try {
-            transferenciaService.realizarTransferencia(transferencia);
+            transferenciaService.realizarTransferencia(transferenciaDto);
             Map<String, String> response = new HashMap<>();
             response.put("estado", "EXITOSO");
             response.put("mensaje", "TRANSFERENCIA EXITOSA");

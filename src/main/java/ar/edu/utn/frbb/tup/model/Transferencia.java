@@ -1,5 +1,7 @@
 package ar.edu.utn.frbb.tup.model;
 
+import ar.edu.utn.frbb.tup.controller.dto.TransferenciaDto;
+
 import java.time.LocalDate;
 
 public class Transferencia {
@@ -14,13 +16,16 @@ public class Transferencia {
     private String tipo;
     private String descripcionBreve;
 
-    public Transferencia() {}
+    public Transferencia() {
+        this.fecha = LocalDate.now();
+    }
 
-    public Transferencia(long cuentaOrigen, long cuentaDestino, double monto, String moneda) {
-        this.cuentaOrigen = cuentaOrigen;
-        this.cuentaDestino = cuentaDestino;
-        this.monto = monto;
-        this.moneda = moneda;
+    public Transferencia(TransferenciaDto transferenciaDto) {
+        this.cuentaOrigen = transferenciaDto.getCuentaOrigen();
+        this.cuentaDestino = transferenciaDto.getCuentaDestino();
+        this.monto = transferenciaDto.getMonto();
+        this.moneda = transferenciaDto.getMoneda();
+        this.fecha = LocalDate.now();
     }
 
     public long getCuentaOrigen() {
