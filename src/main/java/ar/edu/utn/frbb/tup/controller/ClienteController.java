@@ -1,9 +1,10 @@
 package ar.edu.utn.frbb.tup.controller;
 
 import ar.edu.utn.frbb.tup.controller.dto.ClienteDto;
+import ar.edu.utn.frbb.tup.controller.handler.CustomApiError;
 import ar.edu.utn.frbb.tup.controller.validator.ClienteValidator;
 import ar.edu.utn.frbb.tup.model.Cliente;
-import ar.edu.utn.frbb.tup.model.exception.ClienteAlreadyExistsException;
+import ar.edu.utn.frbb.tup.model.exception.*;
 import ar.edu.utn.frbb.tup.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,8 +36,19 @@ public class ClienteController {
     }
 
     @PostMapping("/alta")
-    public Cliente altaCliente(@RequestBody ClienteDto clienteDto) throws ClienteAlreadyExistsException {
-        clienteValidator.validate(clienteDto);
-        return clienteService.darDeAltaCliente(clienteDto);
+    public ResponseEntity<?> altaCliente(@RequestBody ClienteDto clienteDto) throws ClienteAlreadyExistsException {
+        try {
+            clienteValidator.validate(clienteDto);
+            Cliente cliente = clienteService.darDeAltaCliente(clienteDto);
+            return new ResponseEntity<>(cliente, HttpStatus.CREATED);
+        } catch(DatoIngresadoInvalidoException e){
+            CustomApiError error = new CustomApiError();
+            error.setErrorMessage(e.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        } catch (ClienteAlreadyExistsException e) {
+            CustomApiError error = new CustomApiError();
+            error.setErrorMessage(e.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+        }
     }
 }

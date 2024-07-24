@@ -1,11 +1,10 @@
 package ar.edu.utn.frbb.tup.controller;
 
 import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
+import ar.edu.utn.frbb.tup.controller.handler.CustomApiError;
 import ar.edu.utn.frbb.tup.controller.validator.CuentaValidator;
 import ar.edu.utn.frbb.tup.model.Cuenta;
-import ar.edu.utn.frbb.tup.model.exception.CuentaAlreadyExistsException;
-import ar.edu.utn.frbb.tup.model.exception.CuentaNoSoportadaException;
-import ar.edu.utn.frbb.tup.model.exception.TipoCuentaAlreadyExistsException;
+import ar.edu.utn.frbb.tup.model.exception.*;
 import ar.edu.utn.frbb.tup.service.CuentaService;
 import ar.edu.utn.frbb.tup.service.impl.CuentaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +36,20 @@ public class CuentaController {
         return new ResponseEntity<>(cuenta, HttpStatus.OK);
     }
 
-    //getCuentasByDNItitular(long dniTitular){}
-
     @PostMapping("/alta")
-    public Cuenta altaCuenta(@RequestBody CuentaDto cuentaDto) throws CuentaNoSoportadaException, TipoCuentaAlreadyExistsException, CuentaAlreadyExistsException {
-        cuentaValidator.validate(cuentaDto);
-        return cuentaService.darDeAltaCuenta(cuentaDto);
+    public ResponseEntity<?> altaCuenta(@RequestBody CuentaDto cuentaDto) throws CuentaNoSoportadaException, TipoCuentaAlreadyExistsException, CuentaAlreadyExistsException, CantidadNegativaException, DatoIngresadoInvalidoException {
+        try {
+            cuentaValidator.validate(cuentaDto);
+            Cuenta cuenta = cuentaService.darDeAltaCuenta(cuentaDto);
+            return new ResponseEntity<>(cuenta, HttpStatus.CREATED);
+        } catch (CantidadNegativaException | DatoIngresadoInvalidoException e){
+            CustomApiError error = new CustomApiError();
+            error.setErrorMessage(e.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        } catch (CuentaNoSoportadaException | TipoCuentaAlreadyExistsException | CuentaAlreadyExistsException e) {
+            CustomApiError error = new CustomApiError();
+            error.setErrorMessage(e.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+        }
     }
 }
