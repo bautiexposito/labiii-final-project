@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TransferenciaService {
 
-    void realizarTransferencia(TransferenciaDto transferenciaDto) throws Exception, NoAlcanzaException, CantidadNegativaException;
+    Transferencia realizarTransferencia(TransferenciaDto transferenciaDto) throws Exception, NoAlcanzaException, CantidadNegativaException;
     List<Transferencia> find(long id);
     List<Transferencia> findAll();
 }

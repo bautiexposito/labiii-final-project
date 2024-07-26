@@ -36,7 +36,7 @@ public class ClienteController {
     }
 
     @PostMapping("/alta")
-    public ResponseEntity<?> altaCliente(@RequestBody ClienteDto clienteDto) throws ClienteAlreadyExistsException {
+    public ResponseEntity<?> altaCliente(@RequestBody ClienteDto clienteDto) throws ClienteAlreadyExistsException, DatoIngresadoInvalidoException {
         try {
             clienteValidator.validate(clienteDto);
             Cliente cliente = clienteService.darDeAltaCliente(clienteDto);

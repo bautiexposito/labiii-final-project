@@ -34,18 +34,24 @@ public class TransferenciaServiceImpl implements TransferenciaService {
         this.cuentaDao = cuentaDao;
     }
 
-    public List<Transferencia> find(long id){return transferenciaDao.findTransfersByID(id);}
+    public List<Transferencia> find(long id) {
+        return transferenciaDao.findTransfersByID(id);
+    }
 
-    public List<Transferencia> findAll(){return transferenciaDao.findAllTransfers();}
+    public List<Transferencia> findAll() {
+        return transferenciaDao.findAllTransfers();
+    }
 
     @Override
-    public void realizarTransferencia(TransferenciaDto transferenciaDto) throws Exception {
+    public Transferencia realizarTransferencia(TransferenciaDto transferenciaDto) throws Exception {
         Transferencia transferencia = new Transferencia(transferenciaDto);
 
         long cuentaOrigenNumero = transferencia.getCuentaOrigen();
         long cuentaDestinoNumero = transferencia.getCuentaDestino();
         double monto = transferencia.getMonto();
         String moneda = transferencia.getMoneda();
+        //String estado = transferencia.getEstado();
+        //String mensaje = transferencia.getMensaje();
 
         Cuenta cuentaOrigen = cuentaDao.findCuenta(cuentaOrigenNumero);
         Cuenta cuentaDestino = cuentaDao.findCuenta(cuentaDestinoNumero);
@@ -54,63 +60,65 @@ public class TransferenciaServiceImpl implements TransferenciaService {
 
         if (cuentaOrigen.getBalance() < monto) {throw new Exception("Saldo insuficiente en la cuenta origen");}
 
-        // Si la cuenta destino no se encuentra creada en nuestro sistema bancario,
-        // Simulamos una invocacion a un servicio externo "Banelco", para determinar si la cuenta destino es existente.
+        if (cuentaOrigen.getMoneda() != tipoMoneda.fromString(moneda)) {throw new Exception("El tipo de moneda ingresado, no coincide con el tipo de moneda de las cuentas bancarias");}
+
         if (cuentaDestino == null) {
-            if(banelco.cuentaExiste(cuentaDestinoNumero)){
-                if (cuentaOrigen.getMoneda()==TipoMoneda.PESOS){
-                    if(monto<1000000){
-                        cuentaOrigen.debitar(monto);
-                        banelco.acreditar(monto, cuentaDestinoNumero);
-                    } else{
-                        banco.guardarComisionEnPesos(monto*0.02);
-                        cuentaOrigen.debitar(monto*0.98);
-                        banelco.acreditar(monto*0.98, cuentaDestinoNumero);
-                    }
-                } else if (cuentaOrigen.getMoneda()==TipoMoneda.DOLARES){
-                    if(monto<5000){
-                        banco.guardarComisionEnDolares(monto*0.005);
-                        cuentaOrigen.debitar(monto*0.995);
-                        banelco.acreditar(monto*0.995, cuentaDestinoNumero);
-                    }
-                }
-                transferencia.setFecha(LocalDate.now());
-                transferencia.setEstado("COMPLETADA");
-                transferenciaDao.guardarTransferencia(transferencia);
-                cuentaDao.actualizarCuenta(cuentaOrigen);
-                return;
-            } else{
+            if (banelco.cuentaExiste(cuentaDestinoNumero)) {
+                procesarTransferenciaExterna(cuentaOrigen, cuentaDestinoNumero, monto, transferencia);
+            } else {
                 throw new Exception("Cuenta destino no encontrada");
             }
+        } else {
+            if (cuentaOrigen == cuentaDestino) {throw new Exception("La cuenta de origen y la cuenta de destino son iguales.");}
+            if (cuentaOrigen.getMoneda() != cuentaDestino.getMoneda()) {throw new Exception("El tipo de moneda de las cuentas bancarias no coincide");}
+            procesarTransferenciaInterna(cuentaOrigen, cuentaDestino, monto, transferencia);
         }
-
-        if (cuentaOrigen.getMoneda() != cuentaDestino.getMoneda()){throw new Exception("El tipo de moneda de las cuentas bancarias no coincide");}
-
-        if(cuentaOrigen.getMoneda() != tipoMoneda.fromString(moneda)){throw new Exception("El tipo de moneda ingresado, no coincide con el tipo de moneda de las cuentas bancarias");}
-
-        if (cuentaOrigen.getMoneda()==TipoMoneda.PESOS){
-            if(monto<1000000){
-                cuentaOrigen.debitar(monto);
-                cuentaDestino.acreditar(monto);
-            } else{
-                banco.guardarComisionEnPesos(monto*0.02);
-                cuentaOrigen.debitar(monto*0.98);
-                cuentaDestino.acreditar(monto*0.98);
-            }
-        } else if (cuentaOrigen.getMoneda()==TipoMoneda.DOLARES){
-            if(monto<5000){
-                banco.guardarComisionEnDolares(monto*0.005);
-                cuentaOrigen.debitar(monto*0.995);
-                cuentaDestino.acreditar(monto*0.995);
-            }
-        }
-
-        transferencia.setFecha(LocalDate.now());
-        transferencia.setEstado("COMPLETADA");
-
-        transferenciaDao.guardarTransferencia(transferencia);
 
         cuentaDao.actualizarCuenta(cuentaOrigen);
-        cuentaDao.actualizarCuenta(cuentaDestino);
+        if (cuentaDestino != null){cuentaDao.actualizarCuenta(cuentaDestino);}
+
+        return transferencia;
+    }
+
+    private void procesarTransferenciaInterna(Cuenta cuentaOrigen, Cuenta cuentaDestino, double monto, Transferencia transferencia) throws Exception {
+        double comision = calcularComision(cuentaOrigen, monto);
+        double montoFinal = monto - comision;
+
+        cuentaOrigen.debitar(montoFinal);
+        cuentaDestino.acreditar(montoFinal);
+
+        transferencia.setFecha(LocalDate.now());
+        transferencia.setEstado("EXITOSO");
+        transferencia.setMensaje("TRANSFERENCIA EXITOSA");
+        transferenciaDao.guardarTransferencia(transferencia);
+    }
+
+    private void procesarTransferenciaExterna(Cuenta cuentaOrigen, long cuentaDestinoNumero, double monto, Transferencia transferencia) throws Exception {
+        double comision = calcularComision(cuentaOrigen, monto);
+        double montoFinal = monto - comision;
+
+        cuentaOrigen.debitar(montoFinal);
+        banelco.acreditar(montoFinal, cuentaDestinoNumero);
+
+        transferencia.setFecha(LocalDate.now());
+        transferencia.setEstado("EXITOSO");
+        transferencia.setMensaje("TRANSFERENCIA EXITOSA");
+        transferenciaDao.guardarTransferencia(transferencia);
+    }
+
+    private double calcularComision(Cuenta cuenta, double monto) {
+        double comision = 0;
+        if (cuenta.getMoneda() == TipoMoneda.PESOS) {
+            if (monto >= 1000000) {
+                comision = monto * 0.02;
+                banco.guardarComisionEnPesos(comision);
+            }
+        } else if (cuenta.getMoneda() == TipoMoneda.DOLARES) {
+            if (monto >= 5000) {
+                comision = monto * 0.005;
+                banco.guardarComisionEnDolares(comision);
+            }
+        }
+        return comision;
     }
 }

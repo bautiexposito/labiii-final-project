@@ -29,9 +29,6 @@ public class CuentaValidator {
         if (cuentaDto.getMoneda() == null || cuentaDto.getMoneda().isEmpty()) {
             throw new DatoIngresadoInvalidoException("El tipo de moneda es obligatorio");
         }
-        if (!"P".equals(cuentaDto.getMoneda()) && !"D".equals(cuentaDto.getMoneda())) {
-            throw new DatoIngresadoInvalidoException("El tipo de moneda no es correcto");
-        }
     }
 
     private void validateBalance(CuentaDto cuentaDto) throws CantidadNegativaException {

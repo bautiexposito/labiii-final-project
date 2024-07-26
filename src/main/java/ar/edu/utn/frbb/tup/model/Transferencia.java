@@ -25,6 +25,8 @@ public class Transferencia {
         this.cuentaDestino = transferenciaDto.getCuentaDestino();
         this.monto = transferenciaDto.getMonto();
         this.moneda = transferenciaDto.getMoneda();
+        this.estado = transferenciaDto.getEstado();
+        this.mensaje = transferenciaDto.getMensaje();
         this.fecha = LocalDate.now();
     }
 
@@ -73,18 +75,4 @@ public class Transferencia {
     public String getDescripcionBreve() {return descripcionBreve;}
 
     public void setDescripcionBreve(String descripcionBreve) {this.descripcionBreve = descripcionBreve;}
-
-    public boolean validarTransferencia() {
-        if (cuentaOrigen==cuentaDestino) {
-            System.out.println("Error: La cuenta de origen y la cuenta de destino son iguales.");
-            return false;
-        }
-
-        if (monto <= 0) {
-            System.out.println("Error: El monto a transferir debe ser mayor que cero.");
-            return false;
-        }
-
-        return true;
-    }
 }

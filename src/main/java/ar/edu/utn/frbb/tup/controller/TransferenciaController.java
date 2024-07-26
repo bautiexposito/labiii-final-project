@@ -56,19 +56,29 @@ public class TransferenciaController {
     }
 
     @PostMapping("/transfer")
-    public ResponseEntity<Map<String, String>> postTransfer(@RequestBody TransferenciaDto transferenciaDto) throws NoAlcanzaException, CantidadNegativaException {
-        transferenciaValidator.validate(transferenciaDto);
+    public ResponseEntity<?> postTransfer(@RequestBody TransferenciaDto transferenciaDto) throws NoAlcanzaException, CantidadNegativaException, DatoIngresadoInvalidoException {
         try {
-            transferenciaService.realizarTransferencia(transferenciaDto);
+            transferenciaValidator.validate(transferenciaDto);
+            Transferencia transferencia = transferenciaService.realizarTransferencia(transferenciaDto);
+            transferencia.setMensaje("TRANSFERENCIA EXITOSA");
             Map<String, String> response = new HashMap<>();
-            response.put("estado", "EXITOSO");
-            response.put("mensaje", "TRANSFERENCIA EXITOSA");
+            response.put("estado", transferencia.getEstado());
+            response.put("mensaje", transferencia.getMensaje());
             return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (DatoIngresadoInvalidoException e) {
+            transferenciaDto.setEstado("ERROR");
+            transferenciaDto.setMensaje(e.getMessage());
             Map<String, String> response = new HashMap<>();
-            response.put("estado", "ERROR");
+            response.put("estado", transferenciaDto.getEstado());
             response.put("mensaje", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } catch (NoAlcanzaException | CantidadNegativaException | Exception e) {
+            transferenciaDto.setEstado("ERROR");
+            transferenciaDto.setMensaje(e.getMessage());
+            Map<String, String> response = new HashMap<>();
+            response.put("estado", transferenciaDto.getEstado());
+            response.put("mensaje", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         }
     }
 }
