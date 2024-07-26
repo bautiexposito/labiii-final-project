@@ -14,7 +14,6 @@ import ar.edu.utn.frbb.tup.service.TransferenciaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -49,9 +48,7 @@ public class TransferenciaServiceImpl implements TransferenciaService {
         long cuentaOrigenNumero = transferencia.getCuentaOrigen();
         long cuentaDestinoNumero = transferencia.getCuentaDestino();
         double monto = transferencia.getMonto();
-        String moneda = transferencia.getMoneda();
-        //String estado = transferencia.getEstado();
-        //String mensaje = transferencia.getMensaje();
+        String moneda = String.valueOf(transferenciaDto.getMoneda());
 
         Cuenta cuentaOrigen = cuentaDao.findCuenta(cuentaOrigenNumero);
         Cuenta cuentaDestino = cuentaDao.findCuenta(cuentaDestinoNumero);
@@ -86,10 +83,6 @@ public class TransferenciaServiceImpl implements TransferenciaService {
 
         cuentaOrigen.debitar(montoFinal);
         cuentaDestino.acreditar(montoFinal);
-
-        transferencia.setFecha(LocalDate.now());
-        transferencia.setEstado("EXITOSO");
-        transferencia.setMensaje("TRANSFERENCIA EXITOSA");
         transferenciaDao.guardarTransferencia(transferencia);
     }
 
@@ -99,10 +92,6 @@ public class TransferenciaServiceImpl implements TransferenciaService {
 
         cuentaOrigen.debitar(montoFinal);
         banelco.acreditar(montoFinal, cuentaDestinoNumero);
-
-        transferencia.setFecha(LocalDate.now());
-        transferencia.setEstado("EXITOSO");
-        transferencia.setMensaje("TRANSFERENCIA EXITOSA");
         transferenciaDao.guardarTransferencia(transferencia);
     }
 

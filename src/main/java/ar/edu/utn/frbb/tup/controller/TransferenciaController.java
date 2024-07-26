@@ -60,23 +60,18 @@ public class TransferenciaController {
         try {
             transferenciaValidator.validate(transferenciaDto);
             Transferencia transferencia = transferenciaService.realizarTransferencia(transferenciaDto);
-            transferencia.setMensaje("TRANSFERENCIA EXITOSA");
             Map<String, String> response = new HashMap<>();
-            response.put("estado", transferencia.getEstado());
-            response.put("mensaje", transferencia.getMensaje());
+            response.put("estado", "EXITOSO");
+            response.put("mensaje", "TRANSFERENCIA EXITOSA");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (DatoIngresadoInvalidoException e) {
-            transferenciaDto.setEstado("ERROR");
-            transferenciaDto.setMensaje(e.getMessage());
             Map<String, String> response = new HashMap<>();
-            response.put("estado", transferenciaDto.getEstado());
+            response.put("estado", "ERROR");
             response.put("mensaje", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } catch (NoAlcanzaException | CantidadNegativaException | Exception e) {
-            transferenciaDto.setEstado("ERROR");
-            transferenciaDto.setMensaje(e.getMessage());
             Map<String, String> response = new HashMap<>();
-            response.put("estado", transferenciaDto.getEstado());
+            response.put("estado", "ERROR");
             response.put("mensaje", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         }

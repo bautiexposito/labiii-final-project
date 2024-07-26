@@ -15,7 +15,6 @@ public class ClienteValidator {
         validateDNI(clienteDto);
         validateFechaNacimiento(clienteDto);
         validateTipoPersona(clienteDto);
-        validateBanco(clienteDto);
     }
 
     private void validateNombre(ClienteDto clienteDto) throws DatoIngresadoInvalidoException {
@@ -47,12 +46,6 @@ public class ClienteValidator {
             TipoPersona.fromString(clienteDto.getTipoPersona());
         } catch (IllegalArgumentException e) {
             throw new DatoIngresadoInvalidoException("Tipo de persona no valido");
-        }
-    }
-
-    private void validateBanco(ClienteDto clienteDto) throws  DatoIngresadoInvalidoException{
-        if(clienteDto.getBanco() == null) {
-            throw new DatoIngresadoInvalidoException("La fecha de nacimiento es obligatoria");
         }
     }
 }

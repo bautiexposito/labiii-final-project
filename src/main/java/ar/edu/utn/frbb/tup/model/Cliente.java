@@ -19,17 +19,17 @@ public class Cliente extends Persona{
         this.fechaAlta = LocalDateTime.now();
     }
 
-    public Cliente(String nombre, String apellido, long dni, TipoPersona tipoPersona, String banco) {
+    public Cliente(String nombre, String apellido, long dni, TipoPersona tipoPersona) {
         super(nombre, apellido, dni);
         this.tipoPersona = tipoPersona;
-        this.banco = banco;
+        this.banco = "Banco De Ando";
         this.fechaAlta = LocalDateTime.now();
     }
 
     public Cliente(ClienteDto clienteDto){
         super(clienteDto.getNombre(), clienteDto.getApellido(), clienteDto.getDni());
         this.setFechaNacimiento(clienteDto.getFechaNacimiento());
-        this.banco = clienteDto.getBanco();
+        this.banco = "Banco De Ando";
         this.tipoPersona = TipoPersona.fromString(clienteDto.getTipoPersona());
         this.fechaAlta = LocalDateTime.now();
     }

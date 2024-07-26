@@ -5,7 +5,7 @@
     "dni": 43046272,
     "fechaNacimiento": "1990-01-01",
     "tipoPersona": "PERSONA_FISICA",
-    "banco": "Banco Provincia",
+    "banco": "Banco De Ando",
     "fechaAlta": "2024-07-18T15:27:40.8384277",
     "cuentas": [
       {
@@ -25,7 +25,7 @@
     "dni": 50938732,
     "fechaNacimiento": "1990-01-01",
     "tipoPersona": "PERSONA_FISICA",
-    "banco": "Banco Nacional",
+    "banco": "Banco De Ando",
     "fechaAlta": "2024-06-18T15:27:40.8384277",
     "cuentas": [
       {
