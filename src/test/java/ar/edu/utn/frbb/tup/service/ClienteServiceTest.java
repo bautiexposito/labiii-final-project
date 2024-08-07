@@ -1,10 +1,14 @@
 package ar.edu.utn.frbb.tup.service;
 
 import ar.edu.utn.frbb.tup.controller.dto.ClienteDto;
+import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
 import ar.edu.utn.frbb.tup.model.*;
 import ar.edu.utn.frbb.tup.model.exception.ClienteAlreadyExistsException;
+import ar.edu.utn.frbb.tup.model.exception.TipoCuentaAlreadyExistsException;
 import ar.edu.utn.frbb.tup.persistence.ClienteDao;
 import ar.edu.utn.frbb.tup.service.impl.ClienteServiceImpl;
+import java.util.List;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -67,6 +71,51 @@ public class ClienteServiceTest {
         assertThrows(IllegalArgumentException.class, () -> clienteService.darDeAltaCliente(clienteMenorDeEdad));
     }
 
+    @Test
+    public void testAgregarCuenta() throws TipoCuentaAlreadyExistsException {
+        ClienteDto clienteDto = getClienteDto();
+        Cliente cliente = new Cliente(clienteDto);
+        CuentaDto cuentaDto = getCuentaDto();
+        Cuenta cuenta = new Cuenta(cuentaDto);
+
+        when(clienteDao.findCliente(cliente.getDni())).thenReturn(cliente);
+
+        clienteService.agregarCuenta(cuenta, cliente.getDni());
+
+        assertTrue(cliente.getCuentas().contains(cuenta));
+        assertEquals(cliente, cuenta.getTitular());
+    }
+
+    @Test
+    public void testBuscarClientePorDni() {
+        ClienteDto clienteDto = getClienteDto();
+        Cliente clienteEsperado = new Cliente(clienteDto);
+
+        when(clienteDao.findCliente(clienteEsperado.getDni())).thenReturn(clienteEsperado);
+
+        Cliente clienteObtenido = clienteService.buscarClientePorDni(clienteEsperado.getDni());
+
+        assertNotNull(clienteObtenido);
+        assertEquals(clienteEsperado, clienteObtenido);
+    }
+
+    @Test
+    public void testObtenerTodosLosClientes() {
+        ClienteDto clienteDto = getClienteDto();
+        Cliente cliente1 = new Cliente(clienteDto);
+        Cliente cliente2 = new Cliente(clienteDto);
+        cliente2.setDni(43049832);
+
+        List<Cliente> clientesEsperados = Arrays.asList(cliente1,cliente2);
+
+        when(clienteDao.findAll()).thenReturn(clientesEsperados);
+
+        List<Cliente> clientesObtenidos = clienteService.obtenerTodosLosClientes();
+
+        assertEquals(clientesEsperados, clientesObtenidos);
+    }
+
+
     public ClienteDto getClienteDto(){
         ClienteDto clienteDto = new ClienteDto();
         clienteDto.setNombre("Juan");
@@ -75,5 +124,14 @@ public class ClienteServiceTest {
         clienteDto.setFechaNacimiento(LocalDate.of(1997, 10, 17));
         clienteDto.setTipoPersona("F");
         return clienteDto;
+    }
+
+    public CuentaDto getCuentaDto(){
+        CuentaDto cuentaDto = new CuentaDto();
+        cuentaDto.setBalance(1000);
+        cuentaDto.setTipoCuenta("C");
+        cuentaDto.setMoneda("Pesos");
+        cuentaDto.setDniTitular(43046272);
+        return cuentaDto;
     }
 }

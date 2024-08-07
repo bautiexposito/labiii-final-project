@@ -16,8 +16,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.mockito.Mockito.when;
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
 
@@ -30,6 +32,9 @@ public class TransferenciaServiceTest {
 
     @Mock
     TransferenciaDao transferenciaDao;
+
+    @Mock
+    Banelco banelco;
 
     @InjectMocks
     TransferenciaServiceImpl transferenciaService;
@@ -67,6 +72,35 @@ public class TransferenciaServiceTest {
         when(cuentaDao.findCuenta(1L)).thenReturn(cuentaOrigen);
 
         assertThrows(Exception.class, () -> transferenciaService.realizarTransferencia(transferenciaDto));
+    }
+
+    @Test
+    public void testRealizarTransferencia_ErrorCuentaOrigenNoEncontrada() {
+        TransferenciaDto transferenciaDto = getTransferenciaDto();
+
+        when(cuentaDao.findCuenta(1L)).thenReturn(null);
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            transferenciaService.realizarTransferencia(transferenciaDto);
+        });
+
+        assertEquals("Cuenta origen no encontrada", exception.getMessage());
+    }
+
+    @Test
+    public void testRealizarTransferencia_ErrorCuentaDestinoNoEncontrada() throws Exception {
+        TransferenciaDto transferenciaDto = getTransferenciaDto();
+
+        CuentaDto cuentaDtoOrigen = getCuentaDtoOrigen();
+        Cuenta cuentaOrigen = new Cuenta(cuentaDtoOrigen);
+
+        when(cuentaDao.findCuenta(1L)).thenReturn(cuentaOrigen);
+        when(cuentaDao.findCuenta(2L)).thenReturn(null);
+        when(banelco.cuentaExiste(2L)).thenReturn(false);
+
+        assertThrows(Exception.class, () -> transferenciaService.realizarTransferencia(transferenciaDto));
+
+        verify(cuentaDao, never()).actualizarCuenta(any());
     }
 
     public CuentaDto getCuentaDtoOrigen(){
