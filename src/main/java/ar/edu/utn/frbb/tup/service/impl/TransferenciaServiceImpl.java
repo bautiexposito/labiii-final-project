@@ -33,14 +33,6 @@ public class TransferenciaServiceImpl implements TransferenciaService {
         this.cuentaDao = cuentaDao;
     }
 
-    public List<Transferencia> find(long id) {
-        return transferenciaDao.findTransfersByID(id);
-    }
-
-    public List<Transferencia> findAll() {
-        return transferenciaDao.findAllTransfers();
-    }
-
     @Override
     public Transferencia realizarTransferencia(TransferenciaDto transferenciaDto) throws Exception {
         Transferencia transferencia = new Transferencia(transferenciaDto);
@@ -109,5 +101,13 @@ public class TransferenciaServiceImpl implements TransferenciaService {
             }
         }
         return comision;
+    }
+
+    public List<Transferencia> find(long id) {
+        return transferenciaDao.findTransfersByID(id);
+    }
+
+    public List<Transferencia> findAll() {
+        return transferenciaDao.findAllTransfers();
     }
 }

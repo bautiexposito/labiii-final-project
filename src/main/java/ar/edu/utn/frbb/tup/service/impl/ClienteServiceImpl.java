@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public class ClienteServiceImpl implements ClienteService {
 
-    private final ClienteDao clienteDao;
+    ClienteDao clienteDao;
 
     public ClienteServiceImpl(ClienteDao clienteDao) {
         this.clienteDao = clienteDao;
@@ -24,12 +24,10 @@ public class ClienteServiceImpl implements ClienteService {
     public Cliente darDeAltaCliente(ClienteDto clienteDto) throws ClienteAlreadyExistsException {
         Cliente cliente = new Cliente(clienteDto);
 
-        if (clienteDao.findCliente(cliente.getDni(), false) != null) {
-            throw new ClienteAlreadyExistsException("Ya existe un cliente con DNI " + cliente.getDni());
-        }
+        Cliente clienteExistente = clienteDao.findCliente(cliente.getDni());
 
-        if(cliente.getFechaNacimiento() == null) {
-            throw new IllegalArgumentException("La fecha de nacimiento no puede ser nula");
+        if (clienteExistente != null) {
+            throw new ClienteAlreadyExistsException("Ya existe un cliente con DNI " + cliente.getDni());
         }
 
         if (cliente.getEdad() < 18) {
@@ -54,7 +52,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Cliente buscarClientePorDni(long dni) {
-        Cliente cliente = clienteDao.findCliente(dni, true);
+        Cliente cliente = clienteDao.findCliente(dni);
         if (cliente == null) {
             throw new IllegalArgumentException("El cliente no existe");
         }

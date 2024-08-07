@@ -16,8 +16,8 @@ import java.util.List;
 @Service
 public class CuentaServiceImpl implements CuentaService {
 
-    private final CuentaDao cuentaDao;
-    private final ClienteService clienteService;
+    CuentaDao cuentaDao;
+    ClienteService clienteService;
 
     @Autowired
     public CuentaServiceImpl(CuentaDao cuentaDao, ClienteService clienteService) {
