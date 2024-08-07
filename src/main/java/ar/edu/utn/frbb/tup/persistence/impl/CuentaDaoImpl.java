@@ -2,7 +2,6 @@ package ar.edu.utn.frbb.tup.persistence.impl;
 
 import java.util.*;
 
-import ar.edu.utn.frbb.tup.model.Cliente;
 import ar.edu.utn.frbb.tup.model.Cuenta;
 import ar.edu.utn.frbb.tup.persistence.CuentaDao;
 import org.springframework.stereotype.Service;

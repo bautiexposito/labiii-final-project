@@ -3,7 +3,6 @@ package ar.edu.utn.frbb.tup.persistence.impl;
 import ar.edu.utn.frbb.tup.model.Cliente;
 import ar.edu.utn.frbb.tup.persistence.ClienteDao;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import java.util.*;
 
