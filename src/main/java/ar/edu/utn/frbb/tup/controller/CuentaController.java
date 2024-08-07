@@ -6,7 +6,6 @@ import ar.edu.utn.frbb.tup.controller.validator.CuentaValidator;
 import ar.edu.utn.frbb.tup.model.Cuenta;
 import ar.edu.utn.frbb.tup.model.exception.*;
 import ar.edu.utn.frbb.tup.service.CuentaService;
-import ar.edu.utn.frbb.tup.service.impl.CuentaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ public class CuentaController {
 
     @GetMapping
     public ResponseEntity<List<Cuenta>> findAll() {
-        List<Cuenta> cuentas = ((CuentaServiceImpl) cuentaService).findAll();
+        List<Cuenta> cuentas = cuentaService.findAll();
         return new ResponseEntity<>(cuentas, HttpStatus.OK);
     }
 

@@ -1,6 +1,5 @@
 package ar.edu.utn.frbb.tup.persistence;
 
-import ar.edu.utn.frbb.tup.model.Cliente;
 import ar.edu.utn.frbb.tup.model.Cuenta;
 
 import java.util.List;
