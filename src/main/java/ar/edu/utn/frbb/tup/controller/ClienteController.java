@@ -30,25 +30,15 @@ public class ClienteController {
     }
 
     @GetMapping("/{dni}")
-    public ResponseEntity<Cliente> getClienteByID(@PathVariable("dni") long dni) {
+    public ResponseEntity<Cliente> getClienteByID(@PathVariable("dni") long dni) throws ClienteNoEncontradoException {
         Cliente cliente = clienteService.buscarClientePorDni(dni);
         return new ResponseEntity<>(cliente, HttpStatus.OK);
     }
 
     @PostMapping("/alta")
-    public ResponseEntity<?> altaCliente(@RequestBody ClienteDto clienteDto) throws ClienteAlreadyExistsException, DatoIngresadoInvalidoException {
-        try {
-            clienteValidator.validate(clienteDto);
-            Cliente cliente = clienteService.darDeAltaCliente(clienteDto);
-            return new ResponseEntity<>(cliente, HttpStatus.CREATED);
-        } catch(DatoIngresadoInvalidoException e){
-            CustomApiError error = new CustomApiError();
-            error.setErrorMessage(e.getMessage());
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-        } catch (ClienteAlreadyExistsException e) {
-            CustomApiError error = new CustomApiError();
-            error.setErrorMessage(e.getMessage());
-            return new ResponseEntity<>(error, HttpStatus.CONFLICT);
-        }
+    public ResponseEntity<?> altaCliente(@RequestBody ClienteDto clienteDto) throws ClienteAlreadyExistsException, DatoIngresadoInvalidoException, ClienteMenorDeEdadException {
+        clienteValidator.validate(clienteDto);
+        Cliente cliente = clienteService.darDeAltaCliente(clienteDto);
+        return new ResponseEntity<>(cliente, HttpStatus.CREATED);
     }
 }

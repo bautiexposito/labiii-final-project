@@ -56,24 +56,10 @@ public class TransferenciaController {
     }
 
     @PostMapping("/transfer")
-    public ResponseEntity<?> postTransfer(@RequestBody TransferenciaDto transferenciaDto) throws NoAlcanzaException, CantidadNegativaException, DatoIngresadoInvalidoException {
-        try {
+    public ResponseEntity<?> postTransfer(@RequestBody TransferenciaDto transferenciaDto) throws DatoIngresadoInvalidoException, CuentaNoEncontradaException,
+            NoAlcanzaException, TipoMonedaException, CuentaNoEncontradaException, CuentaOrigenYdestinoException, CantidadNegativaException, Exception {
             transferenciaValidator.validate(transferenciaDto);
             Transferencia transferencia = transferenciaService.realizarTransferencia(transferenciaDto);
-            Map<String, String> response = new HashMap<>();
-            response.put("estado", "EXITOSO");
-            response.put("mensaje", "TRANSFERENCIA EXITOSA");
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (DatoIngresadoInvalidoException e) {
-            Map<String, String> response = new HashMap<>();
-            response.put("estado", "ERROR");
-            response.put("mensaje", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        } catch (NoAlcanzaException | CantidadNegativaException | Exception e) {
-            Map<String, String> response = new HashMap<>();
-            response.put("estado", "ERROR");
-            response.put("mensaje", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
-        }
+            return new ResponseEntity<>(transferencia, HttpStatus.CREATED);
     }
 }

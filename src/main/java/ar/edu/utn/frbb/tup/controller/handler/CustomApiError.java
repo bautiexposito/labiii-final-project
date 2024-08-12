@@ -2,29 +2,22 @@ package ar.edu.utn.frbb.tup.controller.handler;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CustomApiError {
 
-    private Integer errorCode;
-    private String errorMessage;
+    private Map<String, String> tipoException = new HashMap<>();
 
     public CustomApiError() {}
 
-    public Integer getErrorCode() {
-        return errorCode;
+    public Map<String, String> getInfoExceptions() {
+        return tipoException;
     }
 
-    public void setErrorCode(int errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void agregarInfoException(String nombreException, String message) {
+        this.tipoException.put(nombreException, message);
     }
 }
-

@@ -1,6 +1,7 @@
 package ar.edu.utn.frbb.tup.model;
 
 import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
+import ar.edu.utn.frbb.tup.model.exception.NoAlcanzaException;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.time.LocalDateTime;
@@ -88,9 +89,9 @@ public class Cuenta {
         return numeroCuenta;
     }
 
-    public void debitar(double monto) throws Exception {
+    public void debitar(double monto) throws NoAlcanzaException {
         if (monto > balance) {
-            throw new Exception("Saldo insuficiente");
+            throw new NoAlcanzaException("Saldo insuficiente");
         }
         this.balance -= monto;
     }

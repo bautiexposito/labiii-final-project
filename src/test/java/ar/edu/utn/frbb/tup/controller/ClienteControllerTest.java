@@ -4,6 +4,8 @@ import ar.edu.utn.frbb.tup.controller.dto.ClienteDto;
 import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
 import ar.edu.utn.frbb.tup.model.*;
 import ar.edu.utn.frbb.tup.model.exception.ClienteAlreadyExistsException;
+import ar.edu.utn.frbb.tup.model.exception.ClienteMenorDeEdadException;
+import ar.edu.utn.frbb.tup.model.exception.ClienteNoEncontradoException;
 import ar.edu.utn.frbb.tup.model.exception.DatoIngresadoInvalidoException;
 import ar.edu.utn.frbb.tup.service.ClienteService;
 import ar.edu.utn.frbb.tup.controller.validator.ClienteValidator;
@@ -53,7 +55,7 @@ public class ClienteControllerTest {
     }
 
     @Test
-    public void testGetClienteByDNI() {
+    public void testGetClienteByDNI() throws ClienteNoEncontradoException {
         ClienteDto clienteDto = getClienteDto();
         Cliente cliente = new Cliente(clienteDto);
 
@@ -66,7 +68,7 @@ public class ClienteControllerTest {
     }
 
     @Test
-    public void testAltaCliente() throws ClienteAlreadyExistsException, DatoIngresadoInvalidoException {
+    public void testAltaCliente() throws ClienteAlreadyExistsException, DatoIngresadoInvalidoException, ClienteMenorDeEdadException {
         ClienteDto clienteDto = getClienteDto();
         Cliente cliente = new Cliente(clienteDto);
 

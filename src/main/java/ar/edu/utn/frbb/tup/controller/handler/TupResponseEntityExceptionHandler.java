@@ -1,8 +1,6 @@
 package ar.edu.utn.frbb.tup.controller.handler;
 
-import ar.edu.utn.frbb.tup.model.exception.CantidadNegativaException;
-import ar.edu.utn.frbb.tup.model.exception.DatoIngresadoInvalidoException;
-import ar.edu.utn.frbb.tup.model.exception.TipoCuentaAlreadyExistsException;
+import ar.edu.utn.frbb.tup.model.exception.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -16,47 +14,41 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class TupResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value
-            = {TipoCuentaAlreadyExistsException.class, IllegalArgumentException.class})
-    protected ResponseEntity<Object> handleMateriaNotFound(
-            Exception ex, WebRequest request) {
-        String exceptionMessage = ex.getMessage();
+    @ExceptionHandler(value = {TipoCuentaAlreadyExistsException.class, IllegalArgumentException.class,
+            CantidadNegativaException.class, DatoIngresadoInvalidoException.class, TipoMonedaException.class,
+            CuentaNoSoportadaException.class, NoAlcanzaException.class, CuentaOrigenYdestinoException.class})
+    protected ResponseEntity<Object> handleBadRequest(Exception ex, WebRequest request) {
         CustomApiError error = new CustomApiError();
-        error.setErrorMessage(exceptionMessage);
-        return handleExceptionInternal(ex, error,
-                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        String nombreException = ex.getClass().getSimpleName();
+        error.agregarInfoException(nombreException, ex.getMessage());
+        return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
-    @ExceptionHandler(value
-            = { IllegalStateException.class })
-    protected ResponseEntity<Object> handleConflict(
-            RuntimeException ex, WebRequest request) {
-        String exceptionMessage = ex.getMessage();
+    @ExceptionHandler(value = { ClienteAlreadyExistsException.class, ClienteMenorDeEdadException.class,
+            CuentaAlreadyExistsException.class})
+    protected ResponseEntity<Object> handleConflict(Exception ex, WebRequest request) {
         CustomApiError error = new CustomApiError();
-        error.setErrorCode(1234);
-        error.setErrorMessage(exceptionMessage);
-        return handleExceptionInternal(ex, error,
-                new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+        String exceptionName = ex.getClass().getSimpleName();
+        error.agregarInfoException(exceptionName, ex.getMessage());
+        return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
-    @ExceptionHandler(value
-            = { CantidadNegativaException.class, DatoIngresadoInvalidoException.class })
-    protected ResponseEntity<Object> handleBadRequest(
-            Exception ex, WebRequest request) {
-        String exceptionMessage = ex.getMessage();
+    @ExceptionHandler(value = {ClienteNoEncontradoException.class, CuentaNoEncontradaException.class})
+    protected ResponseEntity<Object> handleNotFound(Exception ex, WebRequest request) {
         CustomApiError error = new CustomApiError();
-        error.setErrorMessage(exceptionMessage);
-        return handleExceptionInternal(ex, error,
-                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        String nombreException = ex.getClass().getSimpleName();
+        error.agregarInfoException(nombreException, ex.getMessage());
+        return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         if (body == null) {
             CustomApiError error = new CustomApiError();
-            error.setErrorMessage(ex.getMessage());
+            String exceptionName = ex.getClass().getSimpleName();
+            error.agregarInfoException(exceptionName, ex.getMessage());
             body = error;
         }
-        return new ResponseEntity(body, headers, status);
+        return new ResponseEntity<>(body, headers, status);
     }
 }

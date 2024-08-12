@@ -36,19 +36,9 @@ public class CuentaController {
     }
 
     @PostMapping("/alta")
-    public ResponseEntity<?> altaCuenta(@RequestBody CuentaDto cuentaDto) throws CuentaNoSoportadaException, TipoCuentaAlreadyExistsException, CuentaAlreadyExistsException, CantidadNegativaException, DatoIngresadoInvalidoException {
-        try {
-            cuentaValidator.validate(cuentaDto);
-            Cuenta cuenta = cuentaService.darDeAltaCuenta(cuentaDto);
-            return new ResponseEntity<>(cuenta, HttpStatus.CREATED);
-        } catch (CantidadNegativaException | DatoIngresadoInvalidoException e){
-            CustomApiError error = new CustomApiError();
-            error.setErrorMessage(e.getMessage());
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-        } catch (CuentaNoSoportadaException | TipoCuentaAlreadyExistsException | CuentaAlreadyExistsException e) {
-            CustomApiError error = new CustomApiError();
-            error.setErrorMessage(e.getMessage());
-            return new ResponseEntity<>(error, HttpStatus.CONFLICT);
-        }
+    public ResponseEntity<?> altaCuenta(@RequestBody CuentaDto cuentaDto) throws CuentaNoSoportadaException, TipoCuentaAlreadyExistsException, CuentaAlreadyExistsException, CantidadNegativaException, DatoIngresadoInvalidoException, ClienteNoEncontradoException {
+        cuentaValidator.validate(cuentaDto);
+        Cuenta cuenta = cuentaService.darDeAltaCuenta(cuentaDto);
+        return new ResponseEntity<>(cuenta, HttpStatus.CREATED);
     }
 }

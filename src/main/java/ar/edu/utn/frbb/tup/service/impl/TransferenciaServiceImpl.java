@@ -5,6 +5,10 @@ import ar.edu.utn.frbb.tup.model.Banco;
 import ar.edu.utn.frbb.tup.model.TipoMoneda;
 import ar.edu.utn.frbb.tup.model.Cuenta;
 import ar.edu.utn.frbb.tup.model.Transferencia;
+import ar.edu.utn.frbb.tup.model.exception.CuentaNoEncontradaException;
+import ar.edu.utn.frbb.tup.model.exception.CuentaOrigenYdestinoException;
+import ar.edu.utn.frbb.tup.model.exception.NoAlcanzaException;
+import ar.edu.utn.frbb.tup.model.exception.TipoMonedaException;
 import ar.edu.utn.frbb.tup.persistence.CuentaDao;
 import ar.edu.utn.frbb.tup.persistence.TransferenciaDao;
 import ar.edu.utn.frbb.tup.service.Banelco;
@@ -32,7 +36,9 @@ public class TransferenciaServiceImpl implements TransferenciaService {
     }
 
     @Override
-    public Transferencia realizarTransferencia(TransferenciaDto transferenciaDto) throws Exception {
+    public Transferencia realizarTransferencia(TransferenciaDto transferenciaDto) throws CuentaNoEncontradaException,
+            NoAlcanzaException, TipoMonedaException, CuentaNoEncontradaException, CuentaOrigenYdestinoException{
+
         Transferencia transferencia = new Transferencia(transferenciaDto);
 
         long cuentaOrigenNumero = transferencia.getCuentaOrigen();
@@ -43,21 +49,21 @@ public class TransferenciaServiceImpl implements TransferenciaService {
         Cuenta cuentaOrigen = cuentaDao.findCuenta(cuentaOrigenNumero);
         Cuenta cuentaDestino = cuentaDao.findCuenta(cuentaDestinoNumero);
 
-        if (cuentaOrigen == null) {throw new Exception("Cuenta origen no encontrada");}
+        if (cuentaOrigen == null) {throw new CuentaNoEncontradaException("Cuenta origen no encontrada");}
 
-        if (cuentaOrigen.getBalance() < monto) {throw new Exception("Saldo insuficiente en la cuenta origen");}
+        if (cuentaOrigen.getBalance() < monto) {throw new NoAlcanzaException("Saldo insuficiente en la cuenta origen");}
 
-        if (cuentaOrigen.getMoneda() != tipoMoneda.fromString(moneda)) {throw new Exception("El tipo de moneda ingresado, no coincide con el tipo de moneda de las cuentas bancarias");}
+        if (cuentaOrigen.getMoneda() != tipoMoneda.fromString(moneda)) {throw new TipoMonedaException("El tipo de moneda ingresado, no coincide con el tipo de moneda de las cuentas bancarias");}
 
         if (cuentaDestino == null) {
             if (banelco.cuentaExiste(cuentaDestinoNumero)) {
                 procesarTransferenciaExterna(cuentaOrigen, cuentaDestinoNumero, monto, transferencia);
             } else {
-                throw new Exception("Cuenta destino no encontrada");
+                throw new CuentaNoEncontradaException("Cuenta destino no encontrada");
             }
         } else {
-            if (cuentaOrigen == cuentaDestino) {throw new Exception("La cuenta de origen y la cuenta de destino son iguales.");}
-            if (cuentaOrigen.getMoneda() != cuentaDestino.getMoneda()) {throw new Exception("El tipo de moneda de las cuentas bancarias no coincide");}
+            if (cuentaOrigen == cuentaDestino) {throw new CuentaOrigenYdestinoException("La cuenta de origen y la cuenta de destino son iguales.");}
+            if (cuentaOrigen.getMoneda() != cuentaDestino.getMoneda()) {throw new TipoMonedaException("El tipo de moneda de las cuentas bancarias no coincide");}
             procesarTransferenciaInterna(cuentaOrigen, cuentaDestino, monto, transferencia);
         }
 
@@ -67,7 +73,7 @@ public class TransferenciaServiceImpl implements TransferenciaService {
         return transferencia;
     }
 
-    private void procesarTransferenciaInterna(Cuenta cuentaOrigen, Cuenta cuentaDestino, double monto, Transferencia transferencia) throws Exception {
+    private void procesarTransferenciaInterna(Cuenta cuentaOrigen, Cuenta cuentaDestino, double monto, Transferencia transferencia) throws NoAlcanzaException {
         double comision = calcularComision(cuentaOrigen, monto);
         double montoFinal = monto - comision;
 
@@ -76,7 +82,7 @@ public class TransferenciaServiceImpl implements TransferenciaService {
         transferenciaDao.guardarTransferencia(transferencia);
     }
 
-    private void procesarTransferenciaExterna(Cuenta cuentaOrigen, long cuentaDestinoNumero, double monto, Transferencia transferencia) throws Exception {
+    private void procesarTransferenciaExterna(Cuenta cuentaOrigen, long cuentaDestinoNumero, double monto, Transferencia transferencia) throws NoAlcanzaException {
         double comision = calcularComision(cuentaOrigen, monto);
         double montoFinal = monto - comision;
 

@@ -4,6 +4,8 @@ import ar.edu.utn.frbb.tup.controller.dto.ClienteDto;
 import ar.edu.utn.frbb.tup.model.Cliente;
 import ar.edu.utn.frbb.tup.model.Cuenta;
 import ar.edu.utn.frbb.tup.model.exception.ClienteAlreadyExistsException;
+import ar.edu.utn.frbb.tup.model.exception.ClienteMenorDeEdadException;
+import ar.edu.utn.frbb.tup.model.exception.ClienteNoEncontradoException;
 import ar.edu.utn.frbb.tup.model.exception.TipoCuentaAlreadyExistsException;
 import ar.edu.utn.frbb.tup.persistence.ClienteDao;
 import ar.edu.utn.frbb.tup.service.ClienteService;
@@ -21,7 +23,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Cliente darDeAltaCliente(ClienteDto clienteDto) throws ClienteAlreadyExistsException {
+    public Cliente darDeAltaCliente(ClienteDto clienteDto) throws ClienteAlreadyExistsException, ClienteMenorDeEdadException {
         Cliente cliente = new Cliente(clienteDto);
 
         Cliente clienteExistente = clienteDao.findCliente(cliente.getDni());
@@ -31,7 +33,7 @@ public class ClienteServiceImpl implements ClienteService {
         }
 
         if (cliente.getEdad() < 18) {
-            throw new IllegalArgumentException("El cliente debe ser mayor a 18 años");
+            throw new ClienteMenorDeEdadException("El cliente debe ser mayor a 18 años");
         }
 
         clienteDao.saveCliente(cliente);
@@ -39,22 +41,22 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public void agregarCuenta(Cuenta cuenta, long dniTitular) throws TipoCuentaAlreadyExistsException {
+    public void agregarCuenta(Cuenta cuenta, long dniTitular) throws ClienteNoEncontradoException {
         Cliente cliente = buscarClientePorDni(dniTitular);
         if (cliente != null) {
             cliente.getCuentas().add(cuenta);
             cuenta.setTitular(cliente);
             clienteDao.saveCliente(cliente);
         }else {
-            throw new IllegalArgumentException("Cliente no encontrado con DNI: " + dniTitular);
+            throw new ClienteNoEncontradoException("Cliente no encontrado con DNI: " + dniTitular);
         }
     }
 
     @Override
-    public Cliente buscarClientePorDni(long dni) {
+    public Cliente buscarClientePorDni(long dni) throws ClienteNoEncontradoException {
         Cliente cliente = clienteDao.findCliente(dni);
         if (cliente == null) {
-            throw new IllegalArgumentException("El cliente no existe");
+            throw new ClienteNoEncontradoException("El cliente no existe");
         }
         return cliente;
     }

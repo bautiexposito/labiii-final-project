@@ -4,6 +4,8 @@ import ar.edu.utn.frbb.tup.controller.dto.ClienteDto;
 import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
 import ar.edu.utn.frbb.tup.model.*;
 import ar.edu.utn.frbb.tup.model.exception.ClienteAlreadyExistsException;
+import ar.edu.utn.frbb.tup.model.exception.ClienteMenorDeEdadException;
+import ar.edu.utn.frbb.tup.model.exception.ClienteNoEncontradoException;
 import ar.edu.utn.frbb.tup.model.exception.TipoCuentaAlreadyExistsException;
 import ar.edu.utn.frbb.tup.persistence.ClienteDao;
 import ar.edu.utn.frbb.tup.service.impl.ClienteServiceImpl;
@@ -41,7 +43,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    public void testDarDeAltaCliente() throws ClienteAlreadyExistsException {
+    public void testDarDeAltaCliente() throws ClienteAlreadyExistsException, ClienteMenorDeEdadException {
         ClienteDto clienteDto = getClienteDto();
 
         when(clienteDao.findCliente(12345678L)).thenReturn(null);
@@ -72,7 +74,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    public void testAgregarCuenta() throws TipoCuentaAlreadyExistsException {
+    public void testAgregarCuenta() throws ClienteNoEncontradoException {
         ClienteDto clienteDto = getClienteDto();
         Cliente cliente = new Cliente(clienteDto);
         CuentaDto cuentaDto = getCuentaDto();
@@ -87,7 +89,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    public void testBuscarClientePorDni() {
+    public void testBuscarClientePorDni() throws ClienteNoEncontradoException {
         ClienteDto clienteDto = getClienteDto();
         Cliente clienteEsperado = new Cliente(clienteDto);
 
