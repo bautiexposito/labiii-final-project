@@ -13,5 +13,7 @@ public interface CuentaDao {
 
     List<Cuenta> findAll();
 
-    void actualizarCuenta(Cuenta cuenta) throws CuentaNoEncontradaException;
+    Cuenta updateCuenta(Cuenta cuenta);
+
+    void deleteCuenta(long id);
 }

@@ -2,10 +2,7 @@ package ar.edu.utn.frbb.tup.service;
 
 import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
 import ar.edu.utn.frbb.tup.model.Cuenta;
-import ar.edu.utn.frbb.tup.model.exception.ClienteNoEncontradoException;
-import ar.edu.utn.frbb.tup.model.exception.CuentaAlreadyExistsException;
-import ar.edu.utn.frbb.tup.model.exception.CuentaNoSoportadaException;
-import ar.edu.utn.frbb.tup.model.exception.TipoCuentaAlreadyExistsException;
+import ar.edu.utn.frbb.tup.model.exception.*;
 
 import java.util.List;
 
@@ -15,7 +12,9 @@ public interface CuentaService {
 
     boolean tipoCuentaEstaSoportada(Cuenta cuenta);
 
-    Cuenta findByID(long id);
+    Cuenta findByID(long id) throws CuentaNoEncontradaException;
 
     List<Cuenta> findAll();
+
+    void eliminarCuenta(long id) throws CuentaNoEncontradaException;
 }

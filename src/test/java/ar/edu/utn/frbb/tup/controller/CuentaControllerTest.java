@@ -46,7 +46,7 @@ public class CuentaControllerTest {
     }
 
     @Test
-    public void testGetCuentaByNumeroDeCuenta(){
+    public void testGetCuentaByNumeroDeCuenta() throws CuentaNoEncontradaException {
         CuentaDto cuentaDto = getCuentaDto();
         Cuenta cuenta = new Cuenta(cuentaDto);
 

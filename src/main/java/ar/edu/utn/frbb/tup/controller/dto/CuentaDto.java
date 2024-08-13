@@ -1,5 +1,7 @@
 package ar.edu.utn.frbb.tup.controller.dto;
 
+import java.util.Random;
+
 public class CuentaDto {
 
     private String tipoCuenta;

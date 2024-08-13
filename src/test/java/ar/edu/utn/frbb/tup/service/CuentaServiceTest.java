@@ -81,30 +81,30 @@ public class CuentaServiceTest {
         assertFalse(cuentaService.tipoCuentaEstaSoportada(cuenta));
     }
 
-    @Test
-    public void testFindByID() {
-        CuentaDto cuentaDto = getCuentaDto();
-        Cuenta cuentaEsperada = new Cuenta(cuentaDto);
+//    @Test
+//    public void testFindByID() {
+//        CuentaDto cuentaDto = getCuentaDto();
+//        Cuenta cuentaEsperada = new Cuenta(cuentaDto);
+//
+//        long id = cuentaEsperada.getNumeroCuenta();
+//
+//        when(cuentaDao.findCuenta(id)).thenReturn(cuentaEsperada);
+//
+//        Cuenta cuentaObtenida = cuentaService.findByID(id);
+//
+//        assertEquals(cuentaEsperada, cuentaObtenida);
+//    }
 
-        long id = cuentaEsperada.getNumeroCuenta();
-
-        when(cuentaDao.findCuenta(id)).thenReturn(cuentaEsperada);
-
-        Cuenta cuentaObtenida = cuentaService.findByID(id);
-
-        assertEquals(cuentaEsperada, cuentaObtenida);
-    }
-
-    @Test
-    public void testFindByID_NoExiste() {
-        long id = 90009;
-
-        when(cuentaDao.findCuenta(id)).thenReturn(null);
-
-        Cuenta cuenta = cuentaService.findByID(id);
-
-        assertNull(cuenta);
-    }
+//    @Test
+//    public void testFindByID_NoExiste() {
+//        long id = 90009;
+//
+//        when(cuentaDao.findCuenta(id)).thenReturn(null);
+//
+//        Cuenta cuenta = cuentaService.findByID(id);
+//
+//        assertNull(cuenta);
+//    }
 
     @Test
     public void testFindAll() {

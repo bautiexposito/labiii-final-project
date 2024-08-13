@@ -67,8 +67,8 @@ public class TransferenciaServiceImpl implements TransferenciaService {
             procesarTransferenciaInterna(cuentaOrigen, cuentaDestino, monto, transferencia);
         }
 
-        cuentaDao.actualizarCuenta(cuentaOrigen);
-        if (cuentaDestino != null){cuentaDao.actualizarCuenta(cuentaDestino);}
+        cuentaDao.updateCuenta(cuentaOrigen);
+        if (cuentaDestino != null){cuentaDao.updateCuenta(cuentaDestino);}
 
         return transferencia;
     }

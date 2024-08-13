@@ -3,8 +3,10 @@ package ar.edu.utn.frbb.tup.service.impl;
 import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
 import ar.edu.utn.frbb.tup.model.Cuenta;
 import ar.edu.utn.frbb.tup.model.TipoCuenta;
+import ar.edu.utn.frbb.tup.model.TipoMoneda;
 import ar.edu.utn.frbb.tup.model.exception.ClienteNoEncontradoException;
 import ar.edu.utn.frbb.tup.model.exception.CuentaAlreadyExistsException;
+import ar.edu.utn.frbb.tup.model.exception.CuentaNoEncontradaException;
 import ar.edu.utn.frbb.tup.model.exception.CuentaNoSoportadaException;
 import ar.edu.utn.frbb.tup.persistence.CuentaDao;
 import ar.edu.utn.frbb.tup.service.ClienteService;
@@ -49,11 +51,25 @@ public class CuentaServiceImpl implements CuentaService {
     }
 
     @Override
-    public Cuenta findByID(long id) {
-        return cuentaDao.findCuenta(id);
+    public Cuenta findByID(long id) throws CuentaNoEncontradaException{
+        Cuenta cuenta = cuentaDao.findCuenta(id);
+        if (cuenta == null){
+            throw new CuentaNoEncontradaException("La cuenta no existe");
+        }
+        return cuenta;
     }
 
+    @Override
     public List<Cuenta> findAll() {
         return cuentaDao.findAll();
+    }
+
+    @Override
+    public void eliminarCuenta(long id) throws CuentaNoEncontradaException {
+        Cuenta cuenta = cuentaDao.findCuenta(id);
+        if (cuenta == null){
+            throw new CuentaNoEncontradaException("La cuenta no existe");
+        }
+        cuentaDao.deleteCuenta(id);
     }
 }

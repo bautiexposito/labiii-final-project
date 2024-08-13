@@ -6,7 +6,6 @@ import ar.edu.utn.frbb.tup.model.Cuenta;
 import ar.edu.utn.frbb.tup.model.exception.ClienteAlreadyExistsException;
 import ar.edu.utn.frbb.tup.model.exception.ClienteMenorDeEdadException;
 import ar.edu.utn.frbb.tup.model.exception.ClienteNoEncontradoException;
-import ar.edu.utn.frbb.tup.model.exception.TipoCuentaAlreadyExistsException;
 
 import java.util.List;
 
@@ -19,4 +18,8 @@ public interface ClienteService {
     Cliente buscarClientePorDni(long dni) throws ClienteNoEncontradoException;
 
     List<Cliente> obtenerTodosLosClientes();
+
+    Cliente actualizarCliente(ClienteDto clienteDto) throws ClienteNoEncontradoException;
+
+    void eliminarCliente(long dni) throws ClienteNoEncontradoException ;
 }

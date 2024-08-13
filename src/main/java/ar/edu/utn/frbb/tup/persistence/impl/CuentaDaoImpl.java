@@ -29,11 +29,13 @@ public class CuentaDaoImpl implements CuentaDao {
     }
 
     @Override
-    public void actualizarCuenta(Cuenta cuenta) throws CuentaNoEncontradaException {
-        if (repositorioCuentas.containsKey(cuenta.getNumeroCuenta())) {
-            repositorioCuentas.put(cuenta.getNumeroCuenta(), cuenta);
-        } else {
-            throw new CuentaNoEncontradaException("Cuenta no encontrada: " + cuenta.getNumeroCuenta());
-        }
+    public Cuenta updateCuenta(Cuenta cuenta) {
+        repositorioCuentas.put(cuenta.getNumeroCuenta(), cuenta);
+        return cuenta;
+    }
+
+    @Override
+    public void deleteCuenta(long id){
+        repositorioCuentas.remove(id);
     }
 }

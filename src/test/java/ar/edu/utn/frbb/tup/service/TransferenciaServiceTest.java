@@ -100,7 +100,7 @@ public class TransferenciaServiceTest {
 
         assertThrows(Exception.class, () -> transferenciaService.realizarTransferencia(transferenciaDto));
 
-        verify(cuentaDao, never()).actualizarCuenta(any());
+        verify(cuentaDao, never()).updateCuenta(any());
     }
 
     public CuentaDto getCuentaDtoOrigen(){

@@ -11,4 +11,8 @@ public interface ClienteDao {
     Cliente findCliente(long dni);
 
     List<Cliente> findAll();
+
+    Cliente updateCliente(Cliente cliente);
+
+    void deleteCliente(long dni);
 }

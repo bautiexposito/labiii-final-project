@@ -26,4 +26,15 @@ public class ClienteDaoImpl implements ClienteDao {
     public List<Cliente> findAll(){
         return new ArrayList<>(repositorioClientes.values());
     }
+
+    @Override
+    public Cliente updateCliente(Cliente cliente){
+        repositorioClientes.put(cliente.getDni(), cliente);
+        return cliente;
+    }
+
+    @Override
+    public void deleteCliente(long dni){
+        repositorioClientes.remove(dni);
+    }
 }

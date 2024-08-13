@@ -30,7 +30,7 @@ public class CuentaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cuenta> getCuentaByNumeroDeCuenta(@PathVariable("id") long id) {
+    public ResponseEntity<Cuenta> getCuentaByNumeroDeCuenta(@PathVariable("id") long id) throws CuentaNoEncontradaException {
         Cuenta cuenta = cuentaService.findByID(id);
         return new ResponseEntity<>(cuenta, HttpStatus.OK);
     }
@@ -40,5 +40,11 @@ public class CuentaController {
         cuentaValidator.validate(cuentaDto);
         Cuenta cuenta = cuentaService.darDeAltaCuenta(cuentaDto);
         return new ResponseEntity<>(cuenta, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminarCuenta(@PathVariable("id") long id) throws CuentaNoEncontradaException{
+        cuentaService.eliminarCuenta(id);
+        return new ResponseEntity<>("Cuenta eliminada correctamente",HttpStatus.OK);
     }
 }

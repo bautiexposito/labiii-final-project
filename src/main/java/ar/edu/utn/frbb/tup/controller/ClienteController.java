@@ -1,7 +1,6 @@
 package ar.edu.utn.frbb.tup.controller;
 
 import ar.edu.utn.frbb.tup.controller.dto.ClienteDto;
-import ar.edu.utn.frbb.tup.controller.handler.CustomApiError;
 import ar.edu.utn.frbb.tup.controller.validator.ClienteValidator;
 import ar.edu.utn.frbb.tup.model.Cliente;
 import ar.edu.utn.frbb.tup.model.exception.*;
@@ -40,5 +39,18 @@ public class ClienteController {
         clienteValidator.validate(clienteDto);
         Cliente cliente = clienteService.darDeAltaCliente(clienteDto);
         return new ResponseEntity<>(cliente, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/actualizar")
+    public ResponseEntity<Cliente> actualizarCliente(@RequestBody ClienteDto clienteDto) throws ClienteNoEncontradoException, DatoIngresadoInvalidoException {
+        clienteValidator.validate(clienteDto);
+        Cliente cliente = clienteService.actualizarCliente(clienteDto);
+        return new ResponseEntity<>(cliente, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{dni}")
+    public ResponseEntity<String> eliminarCliente(@PathVariable("dni") long dni) throws ClienteNoEncontradoException{
+        clienteService.eliminarCliente(dni);
+        return new ResponseEntity<>("Cliente eliminado correctamente",HttpStatus.OK);
     }
 }
