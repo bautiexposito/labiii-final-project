@@ -2,11 +2,13 @@ package ar.edu.utn.frbb.tup.model;
 
 import ar.edu.utn.frbb.tup.controller.dto.ClienteDto;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 public class Cliente extends Persona{
 
     private TipoPersona tipoPersona;
@@ -34,34 +36,6 @@ public class Cliente extends Persona{
         this.fechaAlta = LocalDateTime.now();
     }
 
-    public TipoPersona getTipoPersona() {
-        return tipoPersona;
-    }
-
-    public void setTipoPersona(TipoPersona tipoPersona) {
-        this.tipoPersona = tipoPersona;
-    }
-
-    public String getBanco() {
-        return banco;
-    }
-
-    public void setBanco(String banco) {
-        this.banco = banco;
-    }
-
-    public LocalDateTime getFechaAlta() {
-        return fechaAlta;
-    }
-
-    public void setFechaAlta(LocalDateTime fechaAlta) {
-        this.fechaAlta = fechaAlta;
-    }
-
-    public Set<Cuenta> getCuentas() {
-        return cuentas;
-    }
-
     public void addCuenta(Cuenta cuenta) {
         this.cuentas.add(cuenta);
         cuenta.setTitular(this);
@@ -75,15 +49,5 @@ public class Cliente extends Persona{
             }
         }
         return false;
-    }
-
-    @Override
-    public String toString() {
-        return "Cliente{" +
-                "tipoPersona=" + tipoPersona +
-                ", banco='" + banco + '\'' +
-                ", fechaAlta=" + fechaAlta +
-                ", cuentas=" + cuentas +
-                '}';
     }
 }
