@@ -26,7 +26,7 @@ public class ClienteServiceImpl implements ClienteService {
     public Cliente darDeAltaCliente(ClienteDto clienteDto) throws ClienteAlreadyExistsException, ClienteMenorDeEdadException {
         Cliente cliente = new Cliente(clienteDto);
 
-        Cliente clienteExistente = clienteDao.findCliente(cliente.getDni());
+        Cliente clienteExistente = clienteDao.findByDni(cliente.getDni());
 
         if (clienteExistente != null) {
             throw new ClienteAlreadyExistsException("Ya existe un cliente con DNI " + cliente.getDni());
@@ -36,7 +36,7 @@ public class ClienteServiceImpl implements ClienteService {
             throw new ClienteMenorDeEdadException("El cliente debe ser mayor a 18 años");
         }
 
-        clienteDao.saveCliente(cliente);
+        clienteDao.save(cliente);
         return cliente;
     }
 
@@ -46,7 +46,7 @@ public class ClienteServiceImpl implements ClienteService {
         if (cliente != null) {
             cliente.getCuentas().add(cuenta);
             cuenta.setTitular(cliente);
-            clienteDao.saveCliente(cliente);
+            clienteDao.save(cliente);
         }else {
             throw new ClienteNoEncontradoException("Cliente no encontrado con DNI: " + dniTitular);
         }
@@ -54,7 +54,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Cliente buscarClientePorDni(long dni) throws ClienteNoEncontradoException {
-        Cliente cliente = clienteDao.findCliente(dni);
+        Cliente cliente = clienteDao.findByDni(dni);
         if (cliente == null) {
             throw new ClienteNoEncontradoException("El cliente no existe");
         }
@@ -68,7 +68,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Cliente actualizarCliente(ClienteDto clienteDto) throws ClienteNoEncontradoException{
-        Cliente clienteExistente = clienteDao.findCliente(clienteDto.getDni());
+        Cliente clienteExistente = clienteDao.findByDni(clienteDto.getDni());
         if (clienteExistente == null) {
             throw new ClienteNoEncontradoException("El cliente no existe");
         }
@@ -76,15 +76,15 @@ public class ClienteServiceImpl implements ClienteService {
         clienteExistente.setApellido(clienteDto.getApellido());
         clienteExistente.setTipoPersona(TipoPersona.fromString(clienteDto.getTipoPersona()));
         clienteExistente.setFechaNacimiento(clienteDto.getFechaNacimiento());
-        return clienteDao.updateCliente(clienteExistente);
+        return clienteDao.save(clienteExistente);
     }
 
     @Override
     public void eliminarCliente(long dni) throws ClienteNoEncontradoException {
-        Cliente cliente = clienteDao.findCliente(dni);
+        Cliente cliente = clienteDao.findByDni(dni);
         if (cliente == null) {
             throw new ClienteNoEncontradoException("El cliente no existe");
         }
-        clienteDao.deleteCliente(dni);
+        clienteDao.deleteByDni(dni);
     }
 }

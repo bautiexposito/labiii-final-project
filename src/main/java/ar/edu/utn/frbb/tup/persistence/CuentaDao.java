@@ -1,19 +1,22 @@
 package ar.edu.utn.frbb.tup.persistence;
 
 import ar.edu.utn.frbb.tup.model.Cuenta;
-import ar.edu.utn.frbb.tup.model.exception.CuentaNoEncontradaException;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface CuentaDao {
+@Repository
+public interface CuentaDao extends JpaRepository<Cuenta, Integer> {
 
-    Cuenta saveCuenta(Cuenta cuenta);
-
-    Cuenta findCuenta(long numeroCuenta);
+    Cuenta findByNumeroCuenta(long numeroCuenta);
 
     List<Cuenta> findAll();
 
-    Cuenta updateCuenta(Cuenta cuenta);
-
-    void deleteCuenta(long id);
+    @Modifying
+    @Query("DELETE FROM Cuenta c WHERE c.numeroCuenta = :numeroCuenta")
+    void deleteByNumeroCuenta(@Param("numeroCuenta") long numeroCuenta);
 }

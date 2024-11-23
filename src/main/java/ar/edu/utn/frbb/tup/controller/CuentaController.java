@@ -1,7 +1,6 @@
 package ar.edu.utn.frbb.tup.controller;
 
 import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
-import ar.edu.utn.frbb.tup.controller.handler.CustomApiError;
 import ar.edu.utn.frbb.tup.controller.validator.CuentaValidator;
 import ar.edu.utn.frbb.tup.model.Cuenta;
 import ar.edu.utn.frbb.tup.model.exception.*;
@@ -31,7 +30,7 @@ public class CuentaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Cuenta> getCuentaByNumeroDeCuenta(@PathVariable("id") long id) throws CuentaNoEncontradaException {
-        Cuenta cuenta = cuentaService.findByID(id);
+        Cuenta cuenta = cuentaService.buscarCuentaPorNumero(id);
         return new ResponseEntity<>(cuenta, HttpStatus.OK);
     }
 

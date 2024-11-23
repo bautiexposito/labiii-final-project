@@ -12,7 +12,7 @@ public interface CuentaService {
 
     boolean tipoCuentaEstaSoportada(Cuenta cuenta);
 
-    Cuenta findByID(long id) throws CuentaNoEncontradaException;
+    Cuenta buscarCuentaPorNumero(long id) throws CuentaNoEncontradaException;
 
     List<Cuenta> findAll();
 

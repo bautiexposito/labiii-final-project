@@ -3,21 +3,33 @@ package ar.edu.utn.frbb.tup.model;
 import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
 import ar.edu.utn.frbb.tup.model.exception.NoAlcanzaException;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Random;
 
-@Data
+@Getter
+@Setter
+@Entity
+@Table(name = "cuentas")
 public class Cuenta {
 
-    private final long numeroCuenta;
-    private final LocalDateTime fechaCreacion;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    private long numeroCuenta;
+    private LocalDateTime fechaCreacion;
     private double balance;
+    @Enumerated(EnumType.STRING)
     private TipoCuenta tipoCuenta;
+    @Enumerated(EnumType.STRING)
+    TipoMoneda moneda;
+    @ManyToOne
+    @JoinColumn(name = "titular_id", nullable = false)
     @JsonBackReference
     Cliente titular;
-    TipoMoneda moneda;
 
     public Cuenta() {
         this.numeroCuenta = generarNumeroCuenta();
@@ -30,10 +42,7 @@ public class Cuenta {
         this.moneda = TipoMoneda.fromString(cuentaDto.getMoneda());
         this.fechaCreacion = LocalDateTime.now();
         this.balance = cuentaDto.getBalance();
-        Random random = new Random();
-        int lowerBound = 1000000;
-        int upperBound = 9000000;
-        this.numeroCuenta = lowerBound + random.nextInt(upperBound); //genera numero de 7 digitos
+        this.numeroCuenta = generarNumeroCuenta();
     }
 
     public void debitar(double monto) throws NoAlcanzaException {

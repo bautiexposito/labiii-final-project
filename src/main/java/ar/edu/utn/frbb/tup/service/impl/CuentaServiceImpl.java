@@ -3,7 +3,6 @@ package ar.edu.utn.frbb.tup.service.impl;
 import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
 import ar.edu.utn.frbb.tup.model.Cuenta;
 import ar.edu.utn.frbb.tup.model.TipoCuenta;
-import ar.edu.utn.frbb.tup.model.TipoMoneda;
 import ar.edu.utn.frbb.tup.model.exception.ClienteNoEncontradoException;
 import ar.edu.utn.frbb.tup.model.exception.CuentaAlreadyExistsException;
 import ar.edu.utn.frbb.tup.model.exception.CuentaNoEncontradaException;
@@ -11,6 +10,7 @@ import ar.edu.utn.frbb.tup.model.exception.CuentaNoSoportadaException;
 import ar.edu.utn.frbb.tup.persistence.CuentaDao;
 import ar.edu.utn.frbb.tup.service.ClienteService;
 import ar.edu.utn.frbb.tup.service.CuentaService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -28,6 +28,7 @@ public class CuentaServiceImpl implements CuentaService {
     }
 
     @Override
+    @Transactional
     public Cuenta darDeAltaCuenta(CuentaDto cuentaDto) throws CuentaAlreadyExistsException, CuentaNoSoportadaException, ClienteNoEncontradoException {
         Cuenta cuenta = new Cuenta(cuentaDto);
 
@@ -35,12 +36,12 @@ public class CuentaServiceImpl implements CuentaService {
             throw new CuentaNoSoportadaException("El tipo de cuenta no está soportado.");
         }
 
-        if (cuentaDao.findCuenta(cuenta.getNumeroCuenta()) != null) {
+        if (cuentaDao.findByNumeroCuenta(cuenta.getNumeroCuenta()) != null) {
             throw new CuentaAlreadyExistsException("La cuenta ya existe.");
         }
 
         clienteService.agregarCuenta(cuenta, cuentaDto.getDniTitular());
-        cuentaDao.saveCuenta(cuenta);
+        cuentaDao.save(cuenta);
 
         return cuenta;
     }
@@ -51,8 +52,8 @@ public class CuentaServiceImpl implements CuentaService {
     }
 
     @Override
-    public Cuenta findByID(long id) throws CuentaNoEncontradaException{
-        Cuenta cuenta = cuentaDao.findCuenta(id);
+    public Cuenta buscarCuentaPorNumero(long numeroCuenta) throws CuentaNoEncontradaException{
+        Cuenta cuenta = cuentaDao.findByNumeroCuenta(numeroCuenta);
         if (cuenta == null){
             throw new CuentaNoEncontradaException("La cuenta no existe");
         }
@@ -65,11 +66,11 @@ public class CuentaServiceImpl implements CuentaService {
     }
 
     @Override
-    public void eliminarCuenta(long id) throws CuentaNoEncontradaException {
-        Cuenta cuenta = cuentaDao.findCuenta(id);
+    public void eliminarCuenta(long numeroCuenta) throws CuentaNoEncontradaException {
+        Cuenta cuenta = cuentaDao.findByNumeroCuenta(numeroCuenta);
         if (cuenta == null){
             throw new CuentaNoEncontradaException("La cuenta no existe");
         }
-        cuentaDao.deleteCuenta(id);
+        cuentaDao.deleteByNumeroCuenta(numeroCuenta);
     }
 }

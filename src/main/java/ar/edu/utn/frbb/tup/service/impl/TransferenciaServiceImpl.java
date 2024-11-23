@@ -13,6 +13,7 @@ import ar.edu.utn.frbb.tup.persistence.CuentaDao;
 import ar.edu.utn.frbb.tup.persistence.TransferenciaDao;
 import ar.edu.utn.frbb.tup.service.Banelco;
 import ar.edu.utn.frbb.tup.service.TransferenciaService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class TransferenciaServiceImpl implements TransferenciaService {
     }
 
     @Override
+    @Transactional
     public Transferencia realizarTransferencia(TransferenciaDto transferenciaDto) throws CuentaNoEncontradaException,
             NoAlcanzaException, TipoMonedaException, CuentaNoEncontradaException, CuentaOrigenYdestinoException{
 
@@ -46,8 +48,8 @@ public class TransferenciaServiceImpl implements TransferenciaService {
         double monto = transferencia.getMonto();
         String moneda = String.valueOf(transferenciaDto.getMoneda());
 
-        Cuenta cuentaOrigen = cuentaDao.findCuenta(cuentaOrigenNumero);
-        Cuenta cuentaDestino = cuentaDao.findCuenta(cuentaDestinoNumero);
+        Cuenta cuentaOrigen = cuentaDao.findByNumeroCuenta(cuentaOrigenNumero);
+        Cuenta cuentaDestino = cuentaDao.findByNumeroCuenta(cuentaDestinoNumero);
 
         if (cuentaOrigen == null) {throw new CuentaNoEncontradaException("Cuenta origen no encontrada");}
 
@@ -67,8 +69,8 @@ public class TransferenciaServiceImpl implements TransferenciaService {
             procesarTransferenciaInterna(cuentaOrigen, cuentaDestino, monto, transferencia);
         }
 
-        cuentaDao.updateCuenta(cuentaOrigen);
-        if (cuentaDestino != null){cuentaDao.updateCuenta(cuentaDestino);}
+        cuentaDao.save(cuentaOrigen);
+        if (cuentaDestino != null){cuentaDao.save(cuentaDestino);}
 
         return transferencia;
     }
@@ -79,7 +81,7 @@ public class TransferenciaServiceImpl implements TransferenciaService {
 
         cuentaOrigen.debitar(montoFinal);
         cuentaDestino.acreditar(montoFinal);
-        transferenciaDao.guardarTransferencia(transferencia);
+        transferenciaDao.save(transferencia);
     }
 
     private void procesarTransferenciaExterna(Cuenta cuentaOrigen, long cuentaDestinoNumero, double monto, Transferencia transferencia) throws NoAlcanzaException {
@@ -88,7 +90,7 @@ public class TransferenciaServiceImpl implements TransferenciaService {
 
         cuentaOrigen.debitar(montoFinal);
         banelco.acreditar(montoFinal, cuentaDestinoNumero);
-        transferenciaDao.guardarTransferencia(transferencia);
+        transferenciaDao.save(transferencia);
     }
 
     private double calcularComision(Cuenta cuenta, double monto) {
@@ -107,11 +109,11 @@ public class TransferenciaServiceImpl implements TransferenciaService {
         return comision;
     }
 
-    public List<Transferencia> find(long id) {
-        return transferenciaDao.findTransfersByID(id);
+    public List<Transferencia> find(long numeroCuenta) {
+        return transferenciaDao.findTransferenciasByCuenta(numeroCuenta);
     }
 
     public List<Transferencia> findAll() {
-        return transferenciaDao.findAllTransfers();
+        return transferenciaDao.findAll();
     }
 }

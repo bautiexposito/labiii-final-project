@@ -1,11 +1,15 @@
 package ar.edu.utn.frbb.tup.model;
 
-import lombok.Data;
+import jakarta.persistence.MappedSuperclass;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.Period;
 
-@Data
+@Getter
+@Setter
+@MappedSuperclass
 public class Persona {
     private String nombre;
     private String apellido;
