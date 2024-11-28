@@ -41,9 +41,9 @@ public class CuentaController {
         return new ResponseEntity<>(cuenta, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarCuenta(@PathVariable("id") long id) throws CuentaNoEncontradaException{
-        cuentaService.eliminarCuenta(id);
+    @DeleteMapping("/{numeroCuenta}")
+    public ResponseEntity<String> eliminarCuenta(@PathVariable("numeroCuenta") long numeroCuenta) throws CuentaNoEncontradaException{
+        cuentaService.eliminarCuenta(numeroCuenta);
         return new ResponseEntity<>("Cuenta eliminada correctamente",HttpStatus.OK);
     }
 }

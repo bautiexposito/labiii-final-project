@@ -41,7 +41,7 @@ public class CuentaServiceImpl implements CuentaService {
         }
 
         clienteService.agregarCuenta(cuenta, cuentaDto.getDniTitular());
-        cuentaDao.save(cuenta);
+//        cuentaDao.save(cuenta);
 
         return cuenta;
     }

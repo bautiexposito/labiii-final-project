@@ -1,13 +1,10 @@
 package ar.edu.utn.frbb.tup.controller.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
 public class ClienteDto extends PersonaDto {
+
     private String tipoPersona;
-
-    public String getTipoPersona() {
-        return tipoPersona;
-    }
-
-    public void setTipoPersona(String tipoPersona) {
-        this.tipoPersona = tipoPersona;
-    }
 }
