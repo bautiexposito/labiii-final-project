@@ -1,6 +1,7 @@
 package ar.edu.utn.frbb.tup.controller;
 
 import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
+import ar.edu.utn.frbb.tup.controller.dto.TransaccionDto;
 import ar.edu.utn.frbb.tup.controller.validator.CuentaValidator;
 import ar.edu.utn.frbb.tup.model.Cuenta;
 import ar.edu.utn.frbb.tup.model.exception.*;
@@ -39,6 +40,20 @@ public class CuentaController {
         cuentaValidator.validate(cuentaDto);
         Cuenta cuenta = cuentaService.darDeAltaCuenta(cuentaDto);
         return new ResponseEntity<>(cuenta, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/deposito")
+    public ResponseEntity<?> depositarDinero(@RequestBody TransaccionDto transaccionDto) throws CuentaNoEncontradaException, CantidadNegativaException{
+        cuentaValidator.validateMonto(transaccionDto);
+        cuentaService.depositarDinero(transaccionDto.getNumeroCuenta(), transaccionDto.getMonto());
+        return new ResponseEntity<>("Deposito realizado con exito", HttpStatus.OK);
+    }
+
+    @PostMapping("/extraccion")
+    public ResponseEntity<?> extraerDinero(@RequestBody TransaccionDto transaccionDto) throws CuentaNoEncontradaException, CantidadNegativaException, NoAlcanzaException {
+        cuentaValidator.validateMonto(transaccionDto);
+        cuentaService.extraerDinero(transaccionDto.getNumeroCuenta(), transaccionDto.getMonto());
+        return new ResponseEntity<>("Extraccion realizada con exito", HttpStatus.OK);
     }
 
     @DeleteMapping("/{numeroCuenta}")

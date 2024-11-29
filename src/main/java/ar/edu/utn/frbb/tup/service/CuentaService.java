@@ -17,4 +17,8 @@ public interface CuentaService {
     List<Cuenta> findAll();
 
     void eliminarCuenta(long id) throws CuentaNoEncontradaException;
+
+    void depositarDinero(long numeroCuenta, double monto) throws CuentaNoEncontradaException;
+
+    void extraerDinero(long numeroCuenta, double monto) throws CuentaNoEncontradaException, NoAlcanzaException;
 }

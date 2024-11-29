@@ -1,5 +1,6 @@
 package ar.edu.utn.frbb.tup.controller.validator;
 
+import ar.edu.utn.frbb.tup.controller.dto.TransaccionDto;
 import ar.edu.utn.frbb.tup.model.exception.CantidadNegativaException;
 import ar.edu.utn.frbb.tup.model.exception.DatoIngresadoInvalidoException;
 import org.springframework.stereotype.Component;
@@ -39,6 +40,12 @@ public class CuentaValidator {
     public void validateDniTitular(CuentaDto cuentaDto) throws DatoIngresadoInvalidoException {
         if (cuentaDto.getDniTitular()<=0){
             throw new DatoIngresadoInvalidoException("El numero DNI no puede ser negativo");
+        }
+    }
+
+    public void validateMonto(TransaccionDto transaccionDto) throws CantidadNegativaException {
+        if (transaccionDto.getMonto() <= 0) {
+            throw new CantidadNegativaException("El monto ingresado debe ser positivo");
         }
     }
 }

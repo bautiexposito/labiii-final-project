@@ -10,4 +10,5 @@ public class CuentaDto {
     private String moneda;
     private long dniTitular;
     private double balance;
+    private long numeroCuenta;
 }

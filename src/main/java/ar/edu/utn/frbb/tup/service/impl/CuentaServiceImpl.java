@@ -3,10 +3,7 @@ package ar.edu.utn.frbb.tup.service.impl;
 import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
 import ar.edu.utn.frbb.tup.model.Cuenta;
 import ar.edu.utn.frbb.tup.model.TipoCuenta;
-import ar.edu.utn.frbb.tup.model.exception.ClienteNoEncontradoException;
-import ar.edu.utn.frbb.tup.model.exception.CuentaAlreadyExistsException;
-import ar.edu.utn.frbb.tup.model.exception.CuentaNoEncontradaException;
-import ar.edu.utn.frbb.tup.model.exception.CuentaNoSoportadaException;
+import ar.edu.utn.frbb.tup.model.exception.*;
 import ar.edu.utn.frbb.tup.persistence.CuentaDao;
 import ar.edu.utn.frbb.tup.service.ClienteService;
 import ar.edu.utn.frbb.tup.service.CuentaService;
@@ -72,5 +69,25 @@ public class CuentaServiceImpl implements CuentaService {
             throw new CuentaNoEncontradaException("La cuenta no existe");
         }
         cuentaDao.deleteByNumeroCuenta(numeroCuenta);
+    }
+
+    @Override
+    public void depositarDinero(long numeroCuenta, double monto) throws CuentaNoEncontradaException {
+        Cuenta cuenta = cuentaDao.findByNumeroCuenta(numeroCuenta);
+        if (cuenta == null){
+            throw new CuentaNoEncontradaException("La cuenta no existe");
+        }
+        cuenta.acreditar(monto);
+        cuentaDao.save(cuenta);
+    }
+
+    @Override
+    public void extraerDinero(long numeroCuenta, double monto) throws CuentaNoEncontradaException, NoAlcanzaException {
+        Cuenta cuenta = cuentaDao.findByNumeroCuenta(numeroCuenta);
+        if (cuenta == null){
+            throw new CuentaNoEncontradaException("La cuenta no existe");
+        }
+        cuenta.debitar(monto);
+        cuentaDao.save(cuenta);
     }
 }
