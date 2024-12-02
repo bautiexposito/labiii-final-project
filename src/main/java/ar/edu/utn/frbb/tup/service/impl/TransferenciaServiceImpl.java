@@ -12,6 +12,7 @@ import ar.edu.utn.frbb.tup.model.exception.TipoMonedaException;
 import ar.edu.utn.frbb.tup.persistence.CuentaDao;
 import ar.edu.utn.frbb.tup.persistence.TransferenciaDao;
 import ar.edu.utn.frbb.tup.service.Banelco;
+import ar.edu.utn.frbb.tup.service.CuentaService;
 import ar.edu.utn.frbb.tup.service.TransferenciaService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class TransferenciaServiceImpl implements TransferenciaService {
 
     private TransferenciaDao transferenciaDao;
     private CuentaDao cuentaDao;
+    private CuentaService cuentaService;
     private TipoMoneda tipoMoneda;
     @Autowired
     private Banco banco;
@@ -31,9 +33,10 @@ public class TransferenciaServiceImpl implements TransferenciaService {
     private Banelco banelco;
 
 
-    public TransferenciaServiceImpl(TransferenciaDao transferenciaDao, CuentaDao cuentaDao) {
+    public TransferenciaServiceImpl(TransferenciaDao transferenciaDao, CuentaDao cuentaDao, CuentaService cuentaService) {
         this.transferenciaDao = transferenciaDao;
         this.cuentaDao = cuentaDao;
+        this.cuentaService = cuentaService;
     }
 
     @Override
@@ -75,20 +78,20 @@ public class TransferenciaServiceImpl implements TransferenciaService {
         return transferencia;
     }
 
-    private void procesarTransferenciaInterna(Cuenta cuentaOrigen, Cuenta cuentaDestino, double monto, Transferencia transferencia) throws NoAlcanzaException {
+    private void procesarTransferenciaInterna(Cuenta cuentaOrigen, Cuenta cuentaDestino, double monto, Transferencia transferencia) throws NoAlcanzaException, CuentaNoEncontradaException {
         double comision = calcularComision(cuentaOrigen, monto);
         double montoFinal = monto - comision;
 
-        cuentaOrigen.debitar(montoFinal);
-        cuentaDestino.acreditar(montoFinal);
+        cuentaService.extraerDinero(cuentaOrigen.getNumeroCuenta(), montoFinal);
+        cuentaService.depositarDinero(cuentaDestino.getNumeroCuenta(), montoFinal);
         transferenciaDao.save(transferencia);
     }
 
-    private void procesarTransferenciaExterna(Cuenta cuentaOrigen, long cuentaDestinoNumero, double monto, Transferencia transferencia) throws NoAlcanzaException {
+    private void procesarTransferenciaExterna(Cuenta cuentaOrigen, long cuentaDestinoNumero, double monto, Transferencia transferencia) throws NoAlcanzaException, CuentaNoEncontradaException {
         double comision = calcularComision(cuentaOrigen, monto);
         double montoFinal = monto - comision;
 
-        cuentaOrigen.debitar(montoFinal);
+        cuentaService.extraerDinero(cuentaOrigen.getNumeroCuenta(), montoFinal);
         banelco.acreditar(montoFinal, cuentaDestinoNumero);
         transferenciaDao.save(transferencia);
     }
