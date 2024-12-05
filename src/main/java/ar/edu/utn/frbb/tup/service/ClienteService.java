@@ -21,5 +21,7 @@ public interface ClienteService {
 
     Cliente actualizarCliente(ClienteDto clienteDto) throws ClienteNoEncontradoException;
 
+    List<Cliente> searchCliente(String nombre, String apellido) throws ClienteNoEncontradoException;
+
     void eliminarCliente(long dni) throws ClienteNoEncontradoException ;
 }

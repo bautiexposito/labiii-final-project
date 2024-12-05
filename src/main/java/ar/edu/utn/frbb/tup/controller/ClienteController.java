@@ -34,6 +34,12 @@ public class ClienteController {
         return new ResponseEntity<>(cliente, HttpStatus.OK);
     }
 
+    @GetMapping("/buscar")
+    public List<Cliente> searchCliente(@RequestParam(value = "nombre", required = false) String nombre,
+                                       @RequestParam(value = "apellido", required = false) String apellido) throws ClienteNoEncontradoException {
+        return clienteService.searchCliente(nombre, apellido);
+    }
+
     @PostMapping("/alta")
     public ResponseEntity<?> altaCliente(@RequestBody ClienteDto clienteDto) throws ClienteAlreadyExistsException, DatoIngresadoInvalidoException, ClienteMenorDeEdadException {
         clienteValidator.validate(clienteDto);

@@ -80,6 +80,11 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    public List<Cliente> searchCliente(String nombre, String apellido) throws ClienteNoEncontradoException {
+        return clienteDao.findByNombreOrApellido(nombre, apellido);
+    }
+
+    @Override
     public void eliminarCliente(long dni) throws ClienteNoEncontradoException {
         Cliente cliente = clienteDao.findByDni(dni);
         if (cliente == null) {

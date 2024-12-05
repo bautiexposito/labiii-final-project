@@ -16,6 +16,9 @@ public interface ClienteDao extends JpaRepository<Cliente, Integer> {
 
     List<Cliente> findAll();
 
+    @Query("SELECT c FROM Cliente c WHERE c.nombre LIKE %:nombre% OR c.apellido LIKE %:apellido%")
+    List<Cliente> findByNombreOrApellido(@Param("nombre") String nombre, @Param("apellido") String apellido);
+
     @Modifying
     @Query("DELETE FROM Cliente c WHERE c.dni = :dni")
     void deleteByDni(@Param("dni") long dni);
